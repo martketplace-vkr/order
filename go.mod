@@ -4,11 +4,9 @@ go 1.25.1
 
 require (
 	github.com/avito-tech/go-transaction-manager v1.5.1
-	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/martketplace-vkr/cart v0.0.0
+	github.com/martketplace-vkr/cart v0.0.1
 	github.com/martketplace-vkr/pkg v0.0.1
-	golang.org/x/crypto v0.48.0
 	google.golang.org/grpc v1.79.2
 	google.golang.org/protobuf v1.36.11
 )
@@ -96,6 +94,7 @@ require (
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
+	golang.org/x/crypto v0.48.0 // indirect
 	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
@@ -105,7 +104,3 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-
-replace github.com/martketplace-vkr/cart => ../cart
-
-replace github.com/martketplace-vkr/pkg => ../pkg
