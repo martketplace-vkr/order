@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin;
+
+option go_package = "github.com/martketplace-vkr/order/pkg/api/grpc/v1/admin;admin";
+
+service OrderAdminService {
+}

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/martketplace-vkr/order/pkg/api/grpc/v1/domain;domain";
+
+message Order {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 vendor_id = 3;
+  string status = 4;
+  OrderProduct product = 5;
+  uint32 quantity = 6;
+  string unit_price = 7;
+  string total_price = 8;
+  string comment = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+message OrderProduct {
+  int64 product_id = 1;
+  string product_name = 2;
+  string image_url = 3;
+}

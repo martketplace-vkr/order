@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package github.com.martketplace.vkr.order.pkg.api.grpc.v1.vendor;
+
+option go_package = "github.com/martketplace-vkr/order/pkg/api/grpc/v1/vendor;vendor";
+
+import "v1/domain/order_domain.proto";
+
+service OrderVendorService {
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
+  rpc GetOrderList(GetOrderListRequest) returns (GetOrderListResponse);
+  rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse);
+}
+
+message GetOrderRequest {
+  int64 vendor_id = 1;
+  int64 order_id = 2;
+}
+
+message GetOrderResponse {
+  .github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order order = 1;
+}
+
+message GetOrderListRequest {
+  int64 vendor_id = 1;
+}
+
+message GetOrderListResponse {
+  repeated .github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order orders = 1;
+}
+
+message UpdateOrderRequest {
+  int64 vendor_id = 1;
+  int64 order_id = 2;
+  string status = 3;
+}
+
+message UpdateOrderResponse {
+  .github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order order = 1;
+}
