@@ -18,7 +18,8 @@ const (
 )
 
 type Payment struct {
-	ID     int64
-	Type   PaymentType
-	Status PaymentStatus
+	ID         int64
+	CurrencyID int64
+	Type       PaymentType
+	Status     PaymentStatus
 }
