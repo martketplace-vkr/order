@@ -16,10 +16,12 @@ type (
 		GetOrderList(ctx context.Context, userID int64) ([]domain.Order, error)
 		CancelOrder(ctx context.Context, userID int64, orderID int64) (*domain.Order, error)
 	}
-
 	cartClient interface {
 		ReserveCheckoutItems(ctx context.Context, in *cartorderpb.ReserveCheckoutItemsRequest, opts ...grpc.CallOption) (*cartorderpb.ReserveCheckoutItemsResponse, error)
 		CommitCheckout(ctx context.Context, in *cartorderpb.CommitCheckoutRequest, opts ...grpc.CallOption) (*cartorderpb.CommitCheckoutResponse, error)
 		ReleaseCheckout(ctx context.Context, in *cartorderpb.ReleaseCheckoutRequest, opts ...grpc.CallOption) (*cartorderpb.ReleaseCheckoutResponse, error)
+	}
+	outbox interface {
+		SendOrderCreate(ctx context.Context, order domain.Order) (err error)
 	}
 )

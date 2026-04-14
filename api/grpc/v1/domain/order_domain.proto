@@ -25,3 +25,14 @@ message OrderProduct {
   string product_name = 2;
   string image_url = 3;
 }
+
+
+message Delivery {
+  int64 type = 1; // 1- delivery to pick up point 2 - delivery to client address
+  optional int64 pick_up_point_id  = 2;
+  optional  int64 clint_address_id = 3;
+}
+
+message Payment{
+  int64 type = 1; // 1 - in pick up point by cash,  2 - in pick up point by card, 3 - online by card, 4 online by crypto 
+}

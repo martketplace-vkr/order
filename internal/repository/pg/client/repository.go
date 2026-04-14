@@ -184,7 +184,7 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 	defer tx.Rollback()
 
 	query := `
-		insert into orders (
+		insert into "order".order (
 			checkout_id,
 			user_id,
 			vendor_id,
@@ -201,7 +201,7 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 		values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 		on conflict (user_id, checkout_id, product_id)
 		do update set
-			checkout_id = orders.checkout_id
+			checkout_id = order.checkout_id
 		returning
 			id,
 			checkout_id,
@@ -218,13 +218,41 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 			updated_at
 	`
 
+	paymentQuery := `
+		insert into "order".payment(
+			order_id,
+			type,
+			status
+		) values (
+			$1,
+			$2,
+			$3 
+		)
+	`
+
+	deliveryQuery := `
+		insert into "order".delivery(
+			order_id,
+			entity_id,
+			type,
+			status
+		) values (
+			$1,
+			$2,
+			$3,
+			$4 
+		)
+	`
+
 	createdOrders := make([]domain.Order, 0, len(orders))
 	for i := range orders {
 		order := orders[i]
 		now := time.Now().UTC()
+
 		if order.CreatedAt.IsZero() {
 			order.CreatedAt = now
 		}
+
 		if order.UpdatedAt.IsZero() {
 			order.UpdatedAt = now
 		}
@@ -246,6 +274,29 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 			order.TotalPrice,
 			order.CreatedAt,
 			order.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = tx.ExecContext(
+			ctx,
+			paymentQuery,
+			createdOrder.ID,
+			order.Payment.Type,
+			order.Payment.Status,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = tx.ExecContext(
+			ctx,
+			deliveryQuery,
+			createdOrder.ID,
+			order.Delivery.EntityID(),
+			order.Delivery.Type,
+			order.Delivery.Status,
 		)
 		if err != nil {
 			return nil, err

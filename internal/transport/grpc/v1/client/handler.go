@@ -3,7 +3,10 @@ package client
 import (
 	"context"
 	"errors"
+	"fmt"
 
+	"github.com/martketplace-vkr/order/domain"
+	"github.com/martketplace-vkr/order/internal/service/client/dto"
 	"github.com/martketplace-vkr/order/internal/service/ordererrors"
 	"github.com/martketplace-vkr/order/internal/transport/grpc/v1/mapper"
 	clientpb "github.com/martketplace-vkr/order/pkg/api/grpc/v1/client"
@@ -23,7 +26,38 @@ func New(service service) *Handler {
 }
 
 func (h *Handler) Checkout(ctx context.Context, req *clientpb.CheckoutRequest) (resp *clientpb.CheckoutResponse, err error) {
-	orders, err := h.service.Checkout(ctx, req.UserId, req.CheckoutId, req.ProductIds, req.ExpectedCartVersion)
+	if err := validateID("user_id", req.GetUserId()); err != nil {
+		return nil, err
+	}
+
+	if req.GetCheckoutId() == "" {
+		return nil, status.Error(codes.InvalidArgument, "checkout_id is required")
+	}
+
+	if len(req.GetProductIds()) == 0 {
+		return nil, status.Error(codes.InvalidArgument, "product_ids are required")
+	}
+
+	for _, productID := range req.GetProductIds() {
+		if productID <= 0 {
+			return nil, status.Error(codes.InvalidArgument, "product_ids must be greater than zero")
+		}
+	}
+
+	orders, err := h.service.Checkout(ctx, dto.CheckoutRequest{
+		UserID:              req.GetUserId(),
+		CheckoutID:          req.GetCheckoutId(),
+		ProductIDs:          req.GetProductIds(),
+		ExpectedCartVersion: req.GetExpectedCartVersion(),
+		Payment: domain.Payment{
+			Type: domain.PaymentType(req.Payment.Type),
+		},
+		Delivery: domain.Delivery{
+			Type:          domain.DeliveryType(req.Delivery.Type),
+			PickUpPointID: req.Delivery.PickUpPointId,
+			ClientAddress: req.Delivery.ClintAddressId,
+		},
+	})
 	if err != nil {
 		return resp, toStatusError(err)
 	}
@@ -34,6 +68,13 @@ func (h *Handler) Checkout(ctx context.Context, req *clientpb.CheckoutRequest) (
 }
 
 func (h *Handler) GetOrder(ctx context.Context, req *clientpb.GetOrderRequest) (resp *clientpb.GetOrderResponse, err error) {
+	if err := validateID("user_id", req.GetUserId()); err != nil {
+		return nil, err
+	}
+	if err := validateID("order_id", req.GetOrderId()); err != nil {
+		return nil, err
+	}
+
 	order, err := h.service.GetOrder(ctx, req.UserId, req.OrderId)
 	if err != nil {
 		return resp, toStatusError(err)
@@ -45,6 +86,10 @@ func (h *Handler) GetOrder(ctx context.Context, req *clientpb.GetOrderRequest) (
 }
 
 func (h *Handler) GetOrderList(ctx context.Context, req *clientpb.GetOrderListRequest) (resp *clientpb.GetOrderListResponse, err error) {
+	if err := validateID("user_id", req.GetUserId()); err != nil {
+		return nil, err
+	}
+
 	orders, err := h.service.GetOrderList(ctx, req.UserId)
 	if err != nil {
 		return resp, toStatusError(err)
@@ -56,6 +101,13 @@ func (h *Handler) GetOrderList(ctx context.Context, req *clientpb.GetOrderListRe
 }
 
 func (h *Handler) CancellOrder(ctx context.Context, req *clientpb.CancelOrderRequest) (resp *clientpb.CancelOrderResponse, err error) {
+	if err := validateID("user_id", req.GetUserId()); err != nil {
+		return nil, err
+	}
+	if err := validateID("order_id", req.GetOrderId()); err != nil {
+		return nil, err
+	}
+
 	order, err := h.service.CancelOrder(ctx, req.UserId, req.OrderId)
 	if err != nil {
 		return resp, toStatusError(err)
@@ -75,4 +127,12 @@ func toStatusError(err error) error {
 	default:
 		return err
 	}
+}
+
+func validateID(field string, value int64) error {
+	if value <= 0 {
+		return fmt.Errorf("%w: %s must be greater than zero", ordererrors.ErrInvalidArgument, field)
+	}
+
+	return nil
 }

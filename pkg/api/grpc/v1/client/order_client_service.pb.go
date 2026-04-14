@@ -28,6 +28,8 @@ type CheckoutRequest struct {
 	CheckoutId          string                 `protobuf:"bytes,2,opt,name=checkout_id,json=checkoutId,proto3" json:"checkout_id,omitempty"`
 	ProductIds          []int64                `protobuf:"varint,3,rep,packed,name=product_ids,json=productIds,proto3" json:"product_ids,omitempty"`
 	ExpectedCartVersion uint64                 `protobuf:"varint,4,opt,name=expected_cart_version,json=expectedCartVersion,proto3" json:"expected_cart_version,omitempty"`
+	Delivery            *domain.Delivery       `protobuf:"bytes,5,opt,name=delivery,proto3" json:"delivery,omitempty"`
+	Payment             *domain.Payment        `protobuf:"bytes,6,opt,name=payment,proto3" json:"payment,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -88,6 +90,20 @@ func (x *CheckoutRequest) GetExpectedCartVersion() uint64 {
 		return x.ExpectedCartVersion
 	}
 	return 0
+}
+
+func (x *CheckoutRequest) GetDelivery() *domain.Delivery {
+	if x != nil {
+		return x.Delivery
+	}
+	return nil
+}
+
+func (x *CheckoutRequest) GetPayment() *domain.Payment {
+	if x != nil {
+		return x.Payment
+	}
+	return nil
 }
 
 type CheckoutResponse struct {
@@ -418,14 +434,16 @@ var File_v1_client_order_client_service_proto protoreflect.FileDescriptor
 
 const file_v1_client_order_client_service_proto_rawDesc = "" +
 	"\n" +
-	"$v1/client/order_client_service.proto\x128github.com.martketplace.vkr.order.pkg.api.grpc.v1.client\x1a\x1cv1/domain/order_domain.proto\"\xa0\x01\n" +
+	"$v1/client/order_client_service.proto\x128github.com.martketplace.vkr.order.pkg.api.grpc.v1.client\x1a\x1cv1/domain/order_domain.proto\"\xdd\x02\n" +
 	"\x0fCheckoutRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1f\n" +
 	"\vcheckout_id\x18\x02 \x01(\tR\n" +
 	"checkoutId\x12\x1f\n" +
 	"\vproduct_ids\x18\x03 \x03(\x03R\n" +
 	"productIds\x122\n" +
-	"\x15expected_cart_version\x18\x04 \x01(\x04R\x13expectedCartVersion\"k\n" +
+	"\x15expected_cart_version\x18\x04 \x01(\x04R\x13expectedCartVersion\x12^\n" +
+	"\bdelivery\x18\x05 \x01(\v2B.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.DeliveryR\bdelivery\x12[\n" +
+	"\apayment\x18\x06 \x01(\v2A.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.PaymentR\apayment\"k\n" +
 	"\x10CheckoutResponse\x12W\n" +
 	"\x06orders\x18\x01 \x03(\v2?.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderR\x06orders\"E\n" +
 	"\x0fGetOrderRequest\x12\x17\n" +
@@ -470,26 +488,30 @@ var file_v1_client_order_client_service_proto_goTypes = []any{
 	(*GetOrderListResponse)(nil), // 5: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse
 	(*CancelOrderRequest)(nil),   // 6: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderRequest
 	(*CancelOrderResponse)(nil),  // 7: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse
-	(*domain.Order)(nil),         // 8: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	(*domain.Delivery)(nil),      // 8: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Delivery
+	(*domain.Payment)(nil),       // 9: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Payment
+	(*domain.Order)(nil),         // 10: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
 }
 var file_v1_client_order_client_service_proto_depIdxs = []int32{
-	8, // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse.orders:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
-	8, // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse.order:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
-	8, // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse.orders:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
-	8, // 3: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse.order:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
-	0, // 4: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.Checkout:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest
-	2, // 5: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrder:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderRequest
-	4, // 6: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrderList:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListRequest
-	6, // 7: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.CancellOrder:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderRequest
-	1, // 8: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.Checkout:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse
-	3, // 9: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrder:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse
-	5, // 10: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrderList:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse
-	7, // 11: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.CancellOrder:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse
-	8, // [8:12] is the sub-list for method output_type
-	4, // [4:8] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	8,  // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest.delivery:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Delivery
+	9,  // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest.payment:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Payment
+	10, // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse.orders:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	10, // 3: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse.order:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	10, // 4: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse.orders:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	10, // 5: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse.order:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	0,  // 6: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.Checkout:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest
+	2,  // 7: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrder:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderRequest
+	4,  // 8: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrderList:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListRequest
+	6,  // 9: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.CancellOrder:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderRequest
+	1,  // 10: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.Checkout:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse
+	3,  // 11: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrder:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse
+	5,  // 12: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrderList:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse
+	7,  // 13: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.CancellOrder:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse
+	10, // [10:14] is the sub-list for method output_type
+	6,  // [6:10] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_v1_client_order_client_service_proto_init() }

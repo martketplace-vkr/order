@@ -17,7 +17,7 @@ func OrderToProto(order *orderdomain.Order) *domainpb.Order {
 		Id:       order.ID,
 		UserId:   order.UserID,
 		VendorId: order.VendorID,
-		Status:   order.Status,
+		Status:   order.Status.String(),
 		Product: &domainpb.OrderProduct{
 			ProductId:   order.ProductID,
 			ProductName: order.ProductName,

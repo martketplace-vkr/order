@@ -206,6 +206,110 @@ func (x *OrderProduct) GetImageUrl() string {
 	return ""
 }
 
+type Delivery struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Type           int64                  `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"` // 1- delivery to pick up point 2 - delivery to client address
+	PickUpPointId  *int64                 `protobuf:"varint,2,opt,name=pick_up_point_id,json=pickUpPointId,proto3,oneof" json:"pick_up_point_id,omitempty"`
+	ClintAddressId *int64                 `protobuf:"varint,3,opt,name=clint_address_id,json=clintAddressId,proto3,oneof" json:"clint_address_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *Delivery) Reset() {
+	*x = Delivery{}
+	mi := &file_v1_domain_order_domain_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Delivery) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Delivery) ProtoMessage() {}
+
+func (x *Delivery) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_domain_order_domain_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Delivery.ProtoReflect.Descriptor instead.
+func (*Delivery) Descriptor() ([]byte, []int) {
+	return file_v1_domain_order_domain_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Delivery) GetType() int64 {
+	if x != nil {
+		return x.Type
+	}
+	return 0
+}
+
+func (x *Delivery) GetPickUpPointId() int64 {
+	if x != nil && x.PickUpPointId != nil {
+		return *x.PickUpPointId
+	}
+	return 0
+}
+
+func (x *Delivery) GetClintAddressId() int64 {
+	if x != nil && x.ClintAddressId != nil {
+		return *x.ClintAddressId
+	}
+	return 0
+}
+
+type Payment struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          int64                  `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"` // 1 - in pick up point by cash,  2 - in pick up point by card, 3 - online by card, 4 online by crypto
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Payment) Reset() {
+	*x = Payment{}
+	mi := &file_v1_domain_order_domain_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Payment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Payment) ProtoMessage() {}
+
+func (x *Payment) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_domain_order_domain_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Payment.ProtoReflect.Descriptor instead.
+func (*Payment) Descriptor() ([]byte, []int) {
+	return file_v1_domain_order_domain_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Payment) GetType() int64 {
+	if x != nil {
+		return x.Type
+	}
+	return 0
+}
+
 var File_v1_domain_order_domain_proto protoreflect.FileDescriptor
 
 const file_v1_domain_order_domain_proto_rawDesc = "" +
@@ -232,7 +336,15 @@ const file_v1_domain_order_domain_proto_rawDesc = "" +
 	"\n" +
 	"product_id\x18\x01 \x01(\x03R\tproductId\x12!\n" +
 	"\fproduct_name\x18\x02 \x01(\tR\vproductName\x12\x1b\n" +
-	"\timage_url\x18\x03 \x01(\tR\bimageUrlBAZ?github.com/martketplace-vkr/order/pkg/api/grpc/v1/domain;domainb\x06proto3"
+	"\timage_url\x18\x03 \x01(\tR\bimageUrl\"\xa5\x01\n" +
+	"\bDelivery\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\x03R\x04type\x12,\n" +
+	"\x10pick_up_point_id\x18\x02 \x01(\x03H\x00R\rpickUpPointId\x88\x01\x01\x12-\n" +
+	"\x10clint_address_id\x18\x03 \x01(\x03H\x01R\x0eclintAddressId\x88\x01\x01B\x13\n" +
+	"\x11_pick_up_point_idB\x13\n" +
+	"\x11_clint_address_id\"\x1d\n" +
+	"\aPayment\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\x03R\x04typeBAZ?github.com/martketplace-vkr/order/pkg/api/grpc/v1/domain;domainb\x06proto3"
 
 var (
 	file_v1_domain_order_domain_proto_rawDescOnce sync.Once
@@ -246,16 +358,18 @@ func file_v1_domain_order_domain_proto_rawDescGZIP() []byte {
 	return file_v1_domain_order_domain_proto_rawDescData
 }
 
-var file_v1_domain_order_domain_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_v1_domain_order_domain_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_v1_domain_order_domain_proto_goTypes = []any{
 	(*Order)(nil),                 // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
 	(*OrderProduct)(nil),          // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderProduct
-	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
+	(*Delivery)(nil),              // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Delivery
+	(*Payment)(nil),               // 3: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Payment
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_v1_domain_order_domain_proto_depIdxs = []int32{
 	1, // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order.product:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderProduct
-	2, // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order.created_at:type_name -> google.protobuf.Timestamp
-	2, // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order.updated_at:type_name -> google.protobuf.Timestamp
+	4, // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order.created_at:type_name -> google.protobuf.Timestamp
+	4, // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order.updated_at:type_name -> google.protobuf.Timestamp
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -268,13 +382,14 @@ func file_v1_domain_order_domain_proto_init() {
 	if File_v1_domain_order_domain_proto != nil {
 		return
 	}
+	file_v1_domain_order_domain_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_domain_order_domain_proto_rawDesc), len(file_v1_domain_order_domain_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
