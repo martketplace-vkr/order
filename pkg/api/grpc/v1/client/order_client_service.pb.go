@@ -430,6 +430,110 @@ func (x *CancelOrderResponse) GetOrder() *domain.Order {
 	return nil
 }
 
+type HasSuccessfulProductOrderRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ProductId     int64                  `protobuf:"varint,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HasSuccessfulProductOrderRequest) Reset() {
+	*x = HasSuccessfulProductOrderRequest{}
+	mi := &file_v1_client_order_client_service_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HasSuccessfulProductOrderRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HasSuccessfulProductOrderRequest) ProtoMessage() {}
+
+func (x *HasSuccessfulProductOrderRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_client_order_client_service_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HasSuccessfulProductOrderRequest.ProtoReflect.Descriptor instead.
+func (*HasSuccessfulProductOrderRequest) Descriptor() ([]byte, []int) {
+	return file_v1_client_order_client_service_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *HasSuccessfulProductOrderRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *HasSuccessfulProductOrderRequest) GetProductId() int64 {
+	if x != nil {
+		return x.ProductId
+	}
+	return 0
+}
+
+type HasSuccessfulProductOrderResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	HasOrder      bool                   `protobuf:"varint,1,opt,name=has_order,json=hasOrder,proto3" json:"has_order,omitempty"`
+	VendorId      int64                  `protobuf:"varint,2,opt,name=vendor_id,json=vendorId,proto3" json:"vendor_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HasSuccessfulProductOrderResponse) Reset() {
+	*x = HasSuccessfulProductOrderResponse{}
+	mi := &file_v1_client_order_client_service_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HasSuccessfulProductOrderResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HasSuccessfulProductOrderResponse) ProtoMessage() {}
+
+func (x *HasSuccessfulProductOrderResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_client_order_client_service_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HasSuccessfulProductOrderResponse.ProtoReflect.Descriptor instead.
+func (*HasSuccessfulProductOrderResponse) Descriptor() ([]byte, []int) {
+	return file_v1_client_order_client_service_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *HasSuccessfulProductOrderResponse) GetHasOrder() bool {
+	if x != nil {
+		return x.HasOrder
+	}
+	return false
+}
+
+func (x *HasSuccessfulProductOrderResponse) GetVendorId() int64 {
+	if x != nil {
+		return x.VendorId
+	}
+	return 0
+}
+
 var File_v1_client_order_client_service_proto protoreflect.FileDescriptor
 
 const file_v1_client_order_client_service_proto_rawDesc = "" +
@@ -459,12 +563,20 @@ const file_v1_client_order_client_service_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x19\n" +
 	"\border_id\x18\x02 \x01(\x03R\aorderId\"l\n" +
 	"\x13CancelOrderResponse\x12U\n" +
-	"\x05order\x18\x01 \x01(\v2?.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderR\x05order2\xba\x05\n" +
+	"\x05order\x18\x01 \x01(\v2?.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderR\x05order\"Z\n" +
+	" HasSuccessfulProductOrderRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1d\n" +
+	"\n" +
+	"product_id\x18\x02 \x01(\x03R\tproductId\"]\n" +
+	"!HasSuccessfulProductOrderResponse\x12\x1b\n" +
+	"\thas_order\x18\x01 \x01(\bR\bhasOrder\x12\x1b\n" +
+	"\tvendor_id\x18\x02 \x01(\x03R\bvendorId2\x91\a\n" +
 	"\x12OrderClientService\x12\xa1\x01\n" +
 	"\bCheckout\x12I.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest\x1aJ.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse\x12\xa1\x01\n" +
 	"\bGetOrder\x12I.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderRequest\x1aJ.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse\x12\xad\x01\n" +
 	"\fGetOrderList\x12M.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListRequest\x1aN.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse\x12\xab\x01\n" +
-	"\fCancellOrder\x12L.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderRequest\x1aM.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponseBAZ?github.com/martketplace-vkr/order/pkg/api/grpc/v1/client;clientb\x06proto3"
+	"\fCancellOrder\x12L.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderRequest\x1aM.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse\x12\xd4\x01\n" +
+	"\x19HasSuccessfulProductOrder\x12Z.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.HasSuccessfulProductOrderRequest\x1a[.github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.HasSuccessfulProductOrderResponseBAZ?github.com/martketplace-vkr/order/pkg/api/grpc/v1/client;clientb\x06proto3"
 
 var (
 	file_v1_client_order_client_service_proto_rawDescOnce sync.Once
@@ -478,37 +590,41 @@ func file_v1_client_order_client_service_proto_rawDescGZIP() []byte {
 	return file_v1_client_order_client_service_proto_rawDescData
 }
 
-var file_v1_client_order_client_service_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_v1_client_order_client_service_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_v1_client_order_client_service_proto_goTypes = []any{
-	(*CheckoutRequest)(nil),      // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest
-	(*CheckoutResponse)(nil),     // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse
-	(*GetOrderRequest)(nil),      // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderRequest
-	(*GetOrderResponse)(nil),     // 3: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse
-	(*GetOrderListRequest)(nil),  // 4: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListRequest
-	(*GetOrderListResponse)(nil), // 5: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse
-	(*CancelOrderRequest)(nil),   // 6: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderRequest
-	(*CancelOrderResponse)(nil),  // 7: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse
-	(*domain.Delivery)(nil),      // 8: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Delivery
-	(*domain.Payment)(nil),       // 9: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Payment
-	(*domain.Order)(nil),         // 10: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	(*CheckoutRequest)(nil),                   // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest
+	(*CheckoutResponse)(nil),                  // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse
+	(*GetOrderRequest)(nil),                   // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderRequest
+	(*GetOrderResponse)(nil),                  // 3: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse
+	(*GetOrderListRequest)(nil),               // 4: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListRequest
+	(*GetOrderListResponse)(nil),              // 5: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse
+	(*CancelOrderRequest)(nil),                // 6: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderRequest
+	(*CancelOrderResponse)(nil),               // 7: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse
+	(*HasSuccessfulProductOrderRequest)(nil),  // 8: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.HasSuccessfulProductOrderRequest
+	(*HasSuccessfulProductOrderResponse)(nil), // 9: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.HasSuccessfulProductOrderResponse
+	(*domain.Delivery)(nil),                   // 10: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Delivery
+	(*domain.Payment)(nil),                    // 11: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Payment
+	(*domain.Order)(nil),                      // 12: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
 }
 var file_v1_client_order_client_service_proto_depIdxs = []int32{
-	8,  // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest.delivery:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Delivery
-	9,  // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest.payment:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Payment
-	10, // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse.orders:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
-	10, // 3: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse.order:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
-	10, // 4: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse.orders:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
-	10, // 5: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse.order:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	10, // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest.delivery:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Delivery
+	11, // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest.payment:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Payment
+	12, // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse.orders:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	12, // 3: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse.order:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	12, // 4: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse.orders:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	12, // 5: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse.order:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
 	0,  // 6: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.Checkout:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutRequest
 	2,  // 7: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrder:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderRequest
 	4,  // 8: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrderList:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListRequest
 	6,  // 9: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.CancellOrder:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderRequest
-	1,  // 10: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.Checkout:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse
-	3,  // 11: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrder:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse
-	5,  // 12: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrderList:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse
-	7,  // 13: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.CancellOrder:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse
-	10, // [10:14] is the sub-list for method output_type
-	6,  // [6:10] is the sub-list for method input_type
+	8,  // 10: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.HasSuccessfulProductOrder:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.HasSuccessfulProductOrderRequest
+	1,  // 11: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.Checkout:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CheckoutResponse
+	3,  // 12: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrder:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderResponse
+	5,  // 13: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.GetOrderList:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.GetOrderListResponse
+	7,  // 14: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.CancellOrder:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.CancelOrderResponse
+	9,  // 15: github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService.HasSuccessfulProductOrder:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.HasSuccessfulProductOrderResponse
+	11, // [11:16] is the sub-list for method output_type
+	6,  // [6:11] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
 	6,  // [6:6] is the sub-list for extension extendee
 	0,  // [0:6] is the sub-list for field type_name
@@ -525,7 +641,7 @@ func file_v1_client_order_client_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_client_order_client_service_proto_rawDesc), len(file_v1_client_order_client_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

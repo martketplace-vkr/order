@@ -14,6 +14,7 @@ type (
 		GetOrdersByCheckout(ctx context.Context, userID int64, checkoutID string) ([]domain.Order, error)
 		GetOrder(ctx context.Context, userID int64, orderID int64) (*domain.Order, error)
 		GetOrderList(ctx context.Context, userID int64) ([]domain.Order, error)
+		HasSuccessfulProductOrder(ctx context.Context, userID int64, productID int64) (bool, int64, error)
 		CancelOrder(ctx context.Context, userID int64, orderID int64) (*domain.Order, error)
 	}
 	cartClient interface {

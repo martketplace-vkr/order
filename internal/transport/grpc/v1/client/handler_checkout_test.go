@@ -26,6 +26,10 @@ func (checkoutServiceStub) GetOrderList(context.Context, int64) ([]domain.Order,
 	return nil, nil
 }
 
+func (checkoutServiceStub) HasSuccessfulProductOrder(context.Context, int64, int64) (bool, int64, error) {
+	return false, 0, nil
+}
+
 func (checkoutServiceStub) CancelOrder(context.Context, int64, int64) (*domain.Order, error) {
 	return nil, nil
 }

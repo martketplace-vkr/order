@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	OrderClientService_Checkout_FullMethodName     = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService/Checkout"
-	OrderClientService_GetOrder_FullMethodName     = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService/GetOrder"
-	OrderClientService_GetOrderList_FullMethodName = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService/GetOrderList"
-	OrderClientService_CancellOrder_FullMethodName = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService/CancellOrder"
+	OrderClientService_Checkout_FullMethodName                  = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService/Checkout"
+	OrderClientService_GetOrder_FullMethodName                  = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService/GetOrder"
+	OrderClientService_GetOrderList_FullMethodName              = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService/GetOrderList"
+	OrderClientService_CancellOrder_FullMethodName              = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService/CancellOrder"
+	OrderClientService_HasSuccessfulProductOrder_FullMethodName = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.client.OrderClientService/HasSuccessfulProductOrder"
 )
 
 // OrderClientServiceClient is the client API for OrderClientService service.
@@ -33,6 +34,7 @@ type OrderClientServiceClient interface {
 	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error)
 	GetOrderList(ctx context.Context, in *GetOrderListRequest, opts ...grpc.CallOption) (*GetOrderListResponse, error)
 	CancellOrder(ctx context.Context, in *CancelOrderRequest, opts ...grpc.CallOption) (*CancelOrderResponse, error)
+	HasSuccessfulProductOrder(ctx context.Context, in *HasSuccessfulProductOrderRequest, opts ...grpc.CallOption) (*HasSuccessfulProductOrderResponse, error)
 }
 
 type orderClientServiceClient struct {
@@ -83,6 +85,16 @@ func (c *orderClientServiceClient) CancellOrder(ctx context.Context, in *CancelO
 	return out, nil
 }
 
+func (c *orderClientServiceClient) HasSuccessfulProductOrder(ctx context.Context, in *HasSuccessfulProductOrderRequest, opts ...grpc.CallOption) (*HasSuccessfulProductOrderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(HasSuccessfulProductOrderResponse)
+	err := c.cc.Invoke(ctx, OrderClientService_HasSuccessfulProductOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderClientServiceServer is the server API for OrderClientService service.
 // All implementations must embed UnimplementedOrderClientServiceServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type OrderClientServiceServer interface {
 	GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error)
 	GetOrderList(context.Context, *GetOrderListRequest) (*GetOrderListResponse, error)
 	CancellOrder(context.Context, *CancelOrderRequest) (*CancelOrderResponse, error)
+	HasSuccessfulProductOrder(context.Context, *HasSuccessfulProductOrderRequest) (*HasSuccessfulProductOrderResponse, error)
 	mustEmbedUnimplementedOrderClientServiceServer()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedOrderClientServiceServer) GetOrderList(context.Context, *GetO
 }
 func (UnimplementedOrderClientServiceServer) CancellOrder(context.Context, *CancelOrderRequest) (*CancelOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancellOrder not implemented")
+}
+func (UnimplementedOrderClientServiceServer) HasSuccessfulProductOrder(context.Context, *HasSuccessfulProductOrderRequest) (*HasSuccessfulProductOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HasSuccessfulProductOrder not implemented")
 }
 func (UnimplementedOrderClientServiceServer) mustEmbedUnimplementedOrderClientServiceServer() {}
 func (UnimplementedOrderClientServiceServer) testEmbeddedByValue()                            {}
@@ -206,6 +222,24 @@ func _OrderClientService_CancellOrder_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderClientService_HasSuccessfulProductOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HasSuccessfulProductOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderClientServiceServer).HasSuccessfulProductOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderClientService_HasSuccessfulProductOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderClientServiceServer).HasSuccessfulProductOrder(ctx, req.(*HasSuccessfulProductOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderClientService_ServiceDesc is the grpc.ServiceDesc for OrderClientService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +262,10 @@ var OrderClientService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CancellOrder",
 			Handler:    _OrderClientService_CancellOrder_Handler,
+		},
+		{
+			MethodName: "HasSuccessfulProductOrder",
+			Handler:    _OrderClientService_HasSuccessfulProductOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

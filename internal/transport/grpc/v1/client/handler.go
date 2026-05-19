@@ -93,6 +93,25 @@ func (h *Handler) GetOrderList(ctx context.Context, req *clientpb.GetOrderListRe
 	}, nil
 }
 
+func (h *Handler) HasSuccessfulProductOrder(ctx context.Context, req *clientpb.HasSuccessfulProductOrderRequest) (resp *clientpb.HasSuccessfulProductOrderResponse, err error) {
+	if err := validateID("user_id", req.GetUserId()); err != nil {
+		return nil, err
+	}
+	if err := validateID("product_id", req.GetProductId()); err != nil {
+		return nil, err
+	}
+
+	hasOrder, vendorID, err := h.service.HasSuccessfulProductOrder(ctx, req.GetUserId(), req.GetProductId())
+	if err != nil {
+		return resp, toStatusError(err)
+	}
+
+	return &clientpb.HasSuccessfulProductOrderResponse{
+		HasOrder: hasOrder,
+		VendorId: vendorID,
+	}, nil
+}
+
 func (h *Handler) CancellOrder(ctx context.Context, req *clientpb.CancelOrderRequest) (resp *clientpb.CancelOrderResponse, err error) {
 	if err := validateID("user_id", req.GetUserId()); err != nil {
 		return nil, err

@@ -56,6 +56,27 @@ func (s *service) GetOrderList(
 	return orders, nil
 }
 
+func (s *service) HasSuccessfulProductOrder(
+	ctx context.Context,
+	userID int64,
+	productID int64,
+) (bool, int64, error) {
+	if userID <= 0 || productID <= 0 {
+		return false, 0, ordererrors.ErrInvalidArgument
+	}
+
+	hasOrder, vendorID, err := s.repository.HasSuccessfulProductOrder(ctx, userID, productID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, 0, nil
+		}
+
+		return false, 0, mapRepositoryError(err)
+	}
+
+	return hasOrder, vendorID, nil
+}
+
 func (s *service) CancelOrder(
 	ctx context.Context,
 	userID int64,

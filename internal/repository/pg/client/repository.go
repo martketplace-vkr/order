@@ -94,6 +94,33 @@ func (r *repository) GetOrderList(ctx context.Context, userID int64) ([]domain.O
 	return orders, nil
 }
 
+func (r *repository) HasSuccessfulProductOrder(ctx context.Context, userID int64, productID int64) (bool, int64, error) {
+	query := `
+		select vendor_id
+		from "order"."order"
+		where user_id = $1
+			and product_id = $2
+			and status = $3
+		order by created_at desc, id desc
+		limit 1
+	`
+
+	var vendorID int64
+	err := r.ctxGetter.DefaultTrOrDB(ctx, r.db).GetContext(
+		ctx,
+		&vendorID,
+		query,
+		userID,
+		productID,
+		domain.Success,
+	)
+	if err != nil {
+		return false, 0, err
+	}
+
+	return true, vendorID, nil
+}
+
 func (r *repository) CancelOrder(ctx context.Context, userID int64, orderID int64) (*domain.Order, error) {
 	query := `
 		update "order"."order"
