@@ -35,7 +35,7 @@ func (r *repository) GetOrder(ctx context.Context, vendorID int64, orderID int64
 			total_price,
 			created_at,
 			updated_at
-		from orders
+		from "order"."order"
 		where vendor_id = $1
 			and id = $2
 	`
@@ -71,7 +71,7 @@ func (r *repository) GetOrderList(ctx context.Context, vendorID int64) ([]domain
 			total_price,
 			created_at,
 			updated_at
-		from orders
+		from "order"."order"
 		where vendor_id = $1
 		order by created_at desc, id desc
 	`
@@ -98,7 +98,7 @@ func (r *repository) UpdateOrder(
 	status string,
 ) (*domain.Order, error) {
 	query := `
-		update orders
+		update "order"."order"
 		set
 			status = $3,
 			updated_at = now()

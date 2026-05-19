@@ -37,7 +37,7 @@ func (r *repository) GetOrder(ctx context.Context, userID int64, orderID int64) 
 			total_price,
 			created_at,
 			updated_at
-		from orders
+		from "order"."order"
 		where user_id = $1
 			and id = $2
 	`
@@ -74,7 +74,7 @@ func (r *repository) GetOrderList(ctx context.Context, userID int64) ([]domain.O
 			total_price,
 			created_at,
 			updated_at
-		from orders
+		from "order"."order"
 		where user_id = $1
 		order by created_at desc, id desc
 	`
@@ -96,7 +96,7 @@ func (r *repository) GetOrderList(ctx context.Context, userID int64) ([]domain.O
 
 func (r *repository) CancelOrder(ctx context.Context, userID int64, orderID int64) (*domain.Order, error) {
 	query := `
-		update orders
+		update "order"."order"
 		set
 			status = 'cancelled',
 			updated_at = now()
@@ -150,7 +150,7 @@ func (r *repository) GetOrdersByCheckout(ctx context.Context, userID int64, chec
 			total_price,
 			created_at,
 			updated_at
-		from orders
+		from "order"."order"
 		where user_id = $1
 			and checkout_id = $2
 		order by id asc
@@ -184,7 +184,7 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 	defer tx.Rollback()
 
 	query := `
-		insert into "order".order (
+		insert into "order"."order" (
 			checkout_id,
 			user_id,
 			vendor_id,
@@ -201,7 +201,7 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 		values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 		on conflict (user_id, checkout_id, product_id)
 		do update set
-			checkout_id = order.checkout_id
+			checkout_id = excluded.checkout_id
 		returning
 			id,
 			checkout_id,
