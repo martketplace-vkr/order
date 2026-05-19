@@ -98,7 +98,7 @@ func (r *repository) CancelOrder(ctx context.Context, userID int64, orderID int6
 	query := `
 		update "order"."order"
 		set
-			status = 'cancelled',
+			status = $3,
 			updated_at = now()
 		where user_id = $1
 			and id = $2
@@ -126,6 +126,7 @@ func (r *repository) CancelOrder(ctx context.Context, userID int64, orderID int6
 		query,
 		userID,
 		orderID,
+		domain.CancelledByClient,
 	)
 	if err != nil {
 		return nil, err

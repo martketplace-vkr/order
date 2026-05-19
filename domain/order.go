@@ -1,6 +1,10 @@
 package domain
 
 import (
+	"database/sql/driver"
+	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	cartorderpb "github.com/martketplace-vkr/cart/pkg/api/grpc/v1/order"
@@ -23,7 +27,65 @@ const (
 )
 
 func (o OrderStatus) String() string {
-	return StatusToString[o]
+	value, ok := StatusToString[o]
+	if !ok {
+		return "unknown"
+	}
+
+	return value
+}
+
+func (o OrderStatus) Value() (driver.Value, error) {
+	value, ok := StatusToString[o]
+	if !ok {
+		return nil, fmt.Errorf("unknown order status: %d", o)
+	}
+
+	return value, nil
+}
+
+func (o *OrderStatus) Scan(value any) error {
+	switch v := value.(type) {
+	case nil:
+		*o = 0
+		return nil
+	case int64:
+		*o = OrderStatus(v)
+		return nil
+	case int32:
+		*o = OrderStatus(v)
+		return nil
+	case int:
+		*o = OrderStatus(v)
+		return nil
+	case []byte:
+		return o.scanString(string(v))
+	case string:
+		return o.scanString(v)
+	default:
+		return fmt.Errorf("scan order status: unsupported type %T", value)
+	}
+}
+
+func (o *OrderStatus) scanString(value string) error {
+	normalized := strings.TrimSpace(value)
+	if normalized == "" {
+		*o = 0
+		return nil
+	}
+
+	if numeric, err := strconv.ParseInt(normalized, 10, 64); err == nil {
+		*o = OrderStatus(numeric)
+		return nil
+	}
+
+	status, ok := StringToStatus[normalized]
+	if !ok {
+		return fmt.Errorf("unknown order status: %q", value)
+	}
+
+	*o = status
+	return nil
 }
 
 const (
@@ -34,12 +96,12 @@ const (
 	DeliveryToClientString  = "delivery_to_client"
 	WaitingPickUpString     = "waiting_pick_up"
 	SuccessString           = "success"
-	CancelledByClientString = "canecelled_by_client"
-	CancelledBySellerString = "canecelled_by_seller"
+	CancelledByClientString = "cancelled_by_client"
+	CancelledBySellerString = "cancelled_by_seller"
 )
 
 var (
-	StatusToString map[OrderStatus]string = map[OrderStatus]string{
+	StatusToString = map[OrderStatus]string{
 		Created:           CreatedString,
 		WaitingForPayment: WaitingForPaymentString,
 		Assembly:          AssemblyString,
@@ -49,6 +111,21 @@ var (
 		Success:           SuccessString,
 		CancelledByClient: CancelledByClientString,
 		CancelledBySeller: CancelledBySellerString,
+	}
+
+	StringToStatus = map[string]OrderStatus{
+		CreatedString:           Created,
+		WaitingForPaymentString: WaitingForPayment,
+		AssemblyString:          Assembly,
+		DeliveryToPickUpString:  DeliveryToPickUp,
+		DeliveryToClientString:  DeliveryToClient,
+		WaitingPickUpString:     WaitingPickUp,
+		SuccessString:           Success,
+		CancelledByClientString: CancelledByClient,
+		CancelledBySellerString: CancelledBySeller,
+		"cancelled":             CancelledByClient,
+		"canecelled_by_client":  CancelledByClient,
+		"canecelled_by_seller":  CancelledBySeller,
 	}
 )
 
