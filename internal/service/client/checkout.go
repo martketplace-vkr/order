@@ -38,7 +38,8 @@ func (s *service) Checkout(
 		return nil, err
 	}
 
-	orders := domain.OrderListFromReservation(reservationResp.GetReservation())
+	orders := domain.OrderListFromReservation(reservationResp.GetReservation()).
+		WithPaymentAndDelivery(req.Payment, req.Delivery)
 	if len(orders) == 0 {
 		return nil, status.Error(codes.FailedPrecondition, "checkout reservation is empty")
 	}

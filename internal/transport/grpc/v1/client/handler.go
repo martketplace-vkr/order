@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/martketplace-vkr/order/domain"
 	"github.com/martketplace-vkr/order/internal/service/client/dto"
 	"github.com/martketplace-vkr/order/internal/service/ordererrors"
 	"github.com/martketplace-vkr/order/internal/transport/grpc/v1/mapper"
@@ -49,14 +48,8 @@ func (h *Handler) Checkout(ctx context.Context, req *clientpb.CheckoutRequest) (
 		CheckoutID:          req.GetCheckoutId(),
 		ProductIDs:          req.GetProductIds(),
 		ExpectedCartVersion: req.GetExpectedCartVersion(),
-		Payment: domain.Payment{
-			Type: domain.PaymentType(req.Payment.Type),
-		},
-		Delivery: domain.Delivery{
-			Type:          domain.DeliveryType(req.Delivery.Type),
-			PickUpPointID: req.Delivery.PickUpPointId,
-			ClientAddress: req.Delivery.ClintAddressId,
-		},
+		Payment:             mapper.PaymentFromProto(req.GetPayment()),
+		Delivery:            mapper.DeliveryFromProto(req.GetDelivery()),
 	})
 	if err != nil {
 		return resp, toStatusError(err)

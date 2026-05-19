@@ -104,3 +104,12 @@ func OrderListFromReservation(reservation *cartorderpb.CheckoutReservation) Orde
 
 	return orders
 }
+
+func (list OrderList) WithPaymentAndDelivery(payment Payment, delivery Delivery) OrderList {
+	for i := range list {
+		list[i].Payment = payment
+		list[i].Delivery = delivery
+	}
+
+	return list
+}
