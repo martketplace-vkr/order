@@ -39,18 +39,6 @@ func (s *service) GetOrder(
 	if err != nil {
 		return nil, mapRepositoryError(err)
 	}
-	if s.outbox != nil {
-		switch fulfillmentStatus {
-		case domain.Success:
-			if err := s.outbox.SendOrderPickedUp(ctx, *order); err != nil {
-				return nil, err
-			}
-		case domain.CancelledBySeller:
-			if err := s.outbox.SendOrderCancelled(ctx, *order); err != nil {
-				return nil, err
-			}
-		}
-	}
 
 	return order, nil
 }
@@ -99,6 +87,19 @@ func (s *service) UpdateOrder(
 	order, err := s.repository.UpdateOrder(ctx, vendorID, orderID, status)
 	if err != nil {
 		return nil, mapRepositoryError(err)
+	}
+
+	if s.outbox != nil {
+		switch fulfillmentStatus {
+		case domain.Success:
+			if err := s.outbox.SendOrderPickedUp(ctx, *order); err != nil {
+				return nil, err
+			}
+		case domain.CancelledBySeller:
+			if err := s.outbox.SendOrderCancelled(ctx, *order); err != nil {
+				return nil, err
+			}
+		}
 	}
 
 	return order, nil
