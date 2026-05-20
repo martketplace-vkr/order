@@ -207,12 +207,14 @@ func (x *GetOrderListResponse) GetOrders() []*domain.Order {
 }
 
 type UpdateOrderRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	VendorId      int64                  `protobuf:"varint,1,opt,name=vendor_id,json=vendorId,proto3" json:"vendor_id,omitempty"`
-	OrderId       int64                  `protobuf:"varint,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
-	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	VendorId int64                  `protobuf:"varint,1,opt,name=vendor_id,json=vendorId,proto3" json:"vendor_id,omitempty"`
+	OrderId  int64                  `protobuf:"varint,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	// Deprecated: use fulfillment_status.
+	Status            string `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
+	FulfillmentStatus string `protobuf:"bytes,4,opt,name=fulfillment_status,json=fulfillmentStatus,proto3" json:"fulfillment_status,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *UpdateOrderRequest) Reset() {
@@ -262,6 +264,13 @@ func (x *UpdateOrderRequest) GetOrderId() int64 {
 func (x *UpdateOrderRequest) GetStatus() string {
 	if x != nil {
 		return x.Status
+	}
+	return ""
+}
+
+func (x *UpdateOrderRequest) GetFulfillmentStatus() string {
+	if x != nil {
+		return x.FulfillmentStatus
 	}
 	return ""
 }
@@ -323,11 +332,12 @@ const file_v1_vendor_order_vendor_service_proto_rawDesc = "" +
 	"\x13GetOrderListRequest\x12\x1b\n" +
 	"\tvendor_id\x18\x01 \x01(\x03R\bvendorId\"o\n" +
 	"\x14GetOrderListResponse\x12W\n" +
-	"\x06orders\x18\x01 \x03(\v2?.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderR\x06orders\"d\n" +
+	"\x06orders\x18\x01 \x03(\v2?.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderR\x06orders\"\x93\x01\n" +
 	"\x12UpdateOrderRequest\x12\x1b\n" +
 	"\tvendor_id\x18\x01 \x01(\x03R\bvendorId\x12\x19\n" +
 	"\border_id\x18\x02 \x01(\x03R\aorderId\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\tR\x06status\"l\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\x12-\n" +
+	"\x12fulfillment_status\x18\x04 \x01(\tR\x11fulfillmentStatus\"l\n" +
 	"\x13UpdateOrderResponse\x12U\n" +
 	"\x05order\x18\x01 \x01(\v2?.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderR\x05order2\x95\x04\n" +
 	"\x12OrderVendorService\x12\xa1\x01\n" +

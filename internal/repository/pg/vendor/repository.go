@@ -27,6 +27,9 @@ func (r *repository) GetOrder(ctx context.Context, vendorID int64, orderID int64
 			user_id,
 			vendor_id,
 			status,
+			payment_status,
+			fulfillment_status,
+			delivery_address_id,
 			product_id,
 			product_name,
 			product_image_url,
@@ -63,6 +66,9 @@ func (r *repository) GetOrderList(ctx context.Context, vendorID int64) ([]domain
 			user_id,
 			vendor_id,
 			status,
+			payment_status,
+			fulfillment_status,
+			delivery_address_id,
 			product_id,
 			product_name,
 			product_image_url,
@@ -101,6 +107,7 @@ func (r *repository) UpdateOrder(
 		update "order"."order"
 		set
 			status = $3,
+			fulfillment_status = $3,
 			updated_at = now()
 		where vendor_id = $1
 			and id = $2
@@ -109,6 +116,9 @@ func (r *repository) UpdateOrder(
 			user_id,
 			vendor_id,
 			status,
+			payment_status,
+			fulfillment_status,
+			delivery_address_id,
 			product_id,
 			product_name,
 			product_image_url,

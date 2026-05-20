@@ -13,11 +13,19 @@ func OrderToProto(order *orderdomain.Order) *domainpb.Order {
 		return nil
 	}
 
+	fulfillmentStatus := order.FulfillmentStatus
+	if fulfillmentStatus == 0 {
+		fulfillmentStatus = order.Status
+	}
+
 	return &domainpb.Order{
-		Id:       order.ID,
-		UserId:   order.UserID,
-		VendorId: order.VendorID,
-		Status:   order.Status.String(),
+		Id:                order.ID,
+		UserId:            order.UserID,
+		VendorId:          order.VendorID,
+		Status:            fulfillmentStatus.String(),
+		PaymentStatus:     string(order.PaymentStatus),
+		FulfillmentStatus: fulfillmentStatus.String(),
+		DeliveryAddressId: order.DeliveryAddressID,
 		Product: &domainpb.OrderProduct{
 			ProductId:   order.ProductID,
 			ProductName: order.ProductName,

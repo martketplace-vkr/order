@@ -49,13 +49,13 @@ func TestCheckoutDoesNotPanicWithoutPaymentAndDelivery(t *testing.T) {
 		t.Fatalf("checkout returned error: %v", err)
 	}
 
-	if svc.req.Payment.Type != domain.OnlineByCrypto {
+	if svc.req.Payment.Type != domain.OnlineByCard {
 		t.Fatalf("unexpected payment type: %v", svc.req.Payment.Type)
 	}
 	if svc.req.Payment.Status != domain.PendingPaymentStatus {
 		t.Fatalf("unexpected payment status: %v", svc.req.Payment.Status)
 	}
-	if svc.req.Delivery.Type != domain.PickUp {
+	if svc.req.Delivery.Type != domain.ClientDelivery {
 		t.Fatalf("unexpected delivery type: %v", svc.req.Delivery.Type)
 	}
 }

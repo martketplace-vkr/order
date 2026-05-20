@@ -86,6 +86,11 @@ func (s *service) CancelOrder(
 	if err != nil {
 		return nil, mapRepositoryError(err)
 	}
+	if s.outbox != nil {
+		if err := s.outbox.SendOrderCancelled(ctx, *order); err != nil {
+			return nil, err
+		}
+	}
 
 	return order, nil
 }

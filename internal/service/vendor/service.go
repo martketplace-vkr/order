@@ -13,11 +13,13 @@ import (
 
 type service struct {
 	repository repository
+	outbox     outbox
 }
 
-func New(repository repository) *service {
+func New(repository repository, outbox outbox) *service {
 	return &service{
 		repository: repository,
+		outbox:     outbox,
 	}
 }
 
@@ -36,6 +38,18 @@ func (s *service) GetOrder(
 	order, err := s.repository.GetOrder(ctx, vendorID, orderID)
 	if err != nil {
 		return nil, mapRepositoryError(err)
+	}
+	if s.outbox != nil {
+		switch fulfillmentStatus {
+		case domain.Success:
+			if err := s.outbox.SendOrderPickedUp(ctx, *order); err != nil {
+				return nil, err
+			}
+		case domain.CancelledBySeller:
+			if err := s.outbox.SendOrderCancelled(ctx, *order); err != nil {
+				return nil, err
+			}
+		}
 	}
 
 	return order, nil
@@ -73,6 +87,13 @@ func (s *service) UpdateOrder(
 	status = strings.TrimSpace(status)
 	if status == "" {
 		return nil, fmt.Errorf("%w: status must not be empty", ordererrors.ErrInvalidArgument)
+	}
+	fulfillmentStatus, err := domain.ParseOrderStatus(status)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %s", ordererrors.ErrInvalidArgument, err.Error())
+	}
+	if _, ok := domain.ValidVendorFulfillmentStatuses[fulfillmentStatus]; !ok {
+		return nil, fmt.Errorf("%w: fulfillment status is not allowed for vendor", ordererrors.ErrInvalidArgument)
 	}
 
 	order, err := s.repository.UpdateOrder(ctx, vendorID, orderID, status)

@@ -24,5 +24,6 @@ type (
 	}
 	outbox interface {
 		SendOrderCreate(ctx context.Context, order domain.Order) (err error)
+		SendOrderCancelled(ctx context.Context, order domain.Order) error
 	}
 )

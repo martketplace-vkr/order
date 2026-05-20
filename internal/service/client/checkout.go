@@ -14,6 +14,9 @@ func (s *service) Checkout(
 	ctx context.Context,
 	req dto.CheckoutRequest,
 ) ([]domain.Order, error) {
+	if req.Delivery.Type != domain.ClientDelivery || req.Delivery.EntityID() <= 0 {
+		return nil, status.Error(codes.FailedPrecondition, "delivery client_address_id is required")
+	}
 
 	existingOrders, err := s.repository.GetOrdersByCheckout(ctx, req.UserID, req.CheckoutID)
 	if err != nil {

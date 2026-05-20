@@ -32,7 +32,9 @@ message GetOrderListResponse {
 message UpdateOrderRequest {
   int64 vendor_id = 1;
   int64 order_id = 2;
+  // Deprecated: use fulfillment_status.
   string status = 3;
+  string fulfillment_status = 4;
 }
 
 message UpdateOrderResponse {

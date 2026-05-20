@@ -49,6 +49,18 @@ func (c *outboxCmp) Stop(ctx context.Context) error {
 }
 
 func (c *outboxCmp) SendOrderCreate(ctx context.Context, order domain.Order) (err error) {
+	return c.sendOrderEvent(ctx, "order_create", order)
+}
+
+func (c *outboxCmp) SendOrderCancelled(ctx context.Context, order domain.Order) error {
+	return c.sendOrderEvent(ctx, "order_cancelled", order)
+}
+
+func (c *outboxCmp) SendOrderPickedUp(ctx context.Context, order domain.Order) error {
+	return c.sendOrderEvent(ctx, "order_picked_up", order)
+}
+
+func (c *outboxCmp) sendOrderEvent(ctx context.Context, eventType string, order domain.Order) (err error) {
 	payload, err := json.Marshal(order)
 	if err != nil {
 		return err
@@ -56,7 +68,7 @@ func (c *outboxCmp) SendOrderCreate(ctx context.Context, order domain.Order) (er
 
 	_, err = c.OutboxClient.CreateEvent(ctx, outbox.CreateEvent{
 		Context:   ctx,
-		EventType: "order_create",
+		EventType: eventType,
 		Key:       uuid.NewString(),
 		Payload:   payload,
 		Topics:    c.cfg.Topics,

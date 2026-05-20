@@ -11,3 +11,8 @@ type repository interface {
 	GetOrderList(ctx context.Context, vendorID int64) ([]domain.Order, error)
 	UpdateOrder(ctx context.Context, vendorID int64, orderID int64, status string) (*domain.Order, error)
 }
+
+type outbox interface {
+	SendOrderCancelled(ctx context.Context, order domain.Order) error
+	SendOrderPickedUp(ctx context.Context, order domain.Order) error
+}

@@ -23,20 +23,24 @@ const (
 )
 
 type Order struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId        int64                  `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	VendorId      int64                  `protobuf:"varint,3,opt,name=vendor_id,json=vendorId,proto3" json:"vendor_id,omitempty"`
-	Status        string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
-	Product       *OrderProduct          `protobuf:"bytes,5,opt,name=product,proto3" json:"product,omitempty"`
-	Quantity      uint32                 `protobuf:"varint,6,opt,name=quantity,proto3" json:"quantity,omitempty"`
-	UnitPrice     string                 `protobuf:"bytes,7,opt,name=unit_price,json=unitPrice,proto3" json:"unit_price,omitempty"`
-	TotalPrice    string                 `protobuf:"bytes,8,opt,name=total_price,json=totalPrice,proto3" json:"total_price,omitempty"`
-	Comment       string                 `protobuf:"bytes,9,opt,name=comment,proto3" json:"comment,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Id       int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId   int64                  `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	VendorId int64                  `protobuf:"varint,3,opt,name=vendor_id,json=vendorId,proto3" json:"vendor_id,omitempty"`
+	// Deprecated: use fulfillment_status.
+	Status            string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	Product           *OrderProduct          `protobuf:"bytes,5,opt,name=product,proto3" json:"product,omitempty"`
+	Quantity          uint32                 `protobuf:"varint,6,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	UnitPrice         string                 `protobuf:"bytes,7,opt,name=unit_price,json=unitPrice,proto3" json:"unit_price,omitempty"`
+	TotalPrice        string                 `protobuf:"bytes,8,opt,name=total_price,json=totalPrice,proto3" json:"total_price,omitempty"`
+	Comment           string                 `protobuf:"bytes,9,opt,name=comment,proto3" json:"comment,omitempty"`
+	CreatedAt         *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt         *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	PaymentStatus     string                 `protobuf:"bytes,12,opt,name=payment_status,json=paymentStatus,proto3" json:"payment_status,omitempty"`
+	FulfillmentStatus string                 `protobuf:"bytes,13,opt,name=fulfillment_status,json=fulfillmentStatus,proto3" json:"fulfillment_status,omitempty"`
+	DeliveryAddressId int64                  `protobuf:"varint,14,opt,name=delivery_address_id,json=deliveryAddressId,proto3" json:"delivery_address_id,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *Order) Reset() {
@@ -144,6 +148,27 @@ func (x *Order) GetUpdatedAt() *timestamppb.Timestamp {
 		return x.UpdatedAt
 	}
 	return nil
+}
+
+func (x *Order) GetPaymentStatus() string {
+	if x != nil {
+		return x.PaymentStatus
+	}
+	return ""
+}
+
+func (x *Order) GetFulfillmentStatus() string {
+	if x != nil {
+		return x.FulfillmentStatus
+	}
+	return ""
+}
+
+func (x *Order) GetDeliveryAddressId() int64 {
+	if x != nil {
+		return x.DeliveryAddressId
+	}
+	return 0
 }
 
 type OrderProduct struct {
@@ -314,7 +339,7 @@ var File_v1_domain_order_domain_proto protoreflect.FileDescriptor
 
 const file_v1_domain_order_domain_proto_rawDesc = "" +
 	"\n" +
-	"\x1cv1/domain/order_domain.proto\x128github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb3\x03\n" +
+	"\x1cv1/domain/order_domain.proto\x128github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb9\x04\n" +
 	"\x05Order\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x12\x1b\n" +
@@ -331,7 +356,10 @@ const file_v1_domain_order_domain_proto_rawDesc = "" +
 	"created_at\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"m\n" +
+	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12%\n" +
+	"\x0epayment_status\x18\f \x01(\tR\rpaymentStatus\x12-\n" +
+	"\x12fulfillment_status\x18\r \x01(\tR\x11fulfillmentStatus\x12.\n" +
+	"\x13delivery_address_id\x18\x0e \x01(\x03R\x11deliveryAddressId\"m\n" +
 	"\fOrderProduct\x12\x1d\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\x03R\tproductId\x12!\n" +

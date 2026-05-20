@@ -7,9 +7,11 @@
 package admin
 
 import (
+	domain "github.com/martketplace-vkr/order/pkg/api/grpc/v1/domain"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
+	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -20,20 +22,268 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type ListOrdersRequest struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	PaymentStatus     string                 `protobuf:"bytes,1,opt,name=payment_status,json=paymentStatus,proto3" json:"payment_status,omitempty"`
+	FulfillmentStatus string                 `protobuf:"bytes,2,opt,name=fulfillment_status,json=fulfillmentStatus,proto3" json:"fulfillment_status,omitempty"`
+	Limit             uint32                 `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset            uint64                 `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ListOrdersRequest) Reset() {
+	*x = ListOrdersRequest{}
+	mi := &file_v1_admin_order_admin_service_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListOrdersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListOrdersRequest) ProtoMessage() {}
+
+func (x *ListOrdersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_admin_order_admin_service_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListOrdersRequest.ProtoReflect.Descriptor instead.
+func (*ListOrdersRequest) Descriptor() ([]byte, []int) {
+	return file_v1_admin_order_admin_service_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *ListOrdersRequest) GetPaymentStatus() string {
+	if x != nil {
+		return x.PaymentStatus
+	}
+	return ""
+}
+
+func (x *ListOrdersRequest) GetFulfillmentStatus() string {
+	if x != nil {
+		return x.FulfillmentStatus
+	}
+	return ""
+}
+
+func (x *ListOrdersRequest) GetLimit() uint32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *ListOrdersRequest) GetOffset() uint64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+type ListOrdersResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Orders        []*domain.Order        `protobuf:"bytes,1,rep,name=orders,proto3" json:"orders,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListOrdersResponse) Reset() {
+	*x = ListOrdersResponse{}
+	mi := &file_v1_admin_order_admin_service_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListOrdersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListOrdersResponse) ProtoMessage() {}
+
+func (x *ListOrdersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_admin_order_admin_service_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListOrdersResponse.ProtoReflect.Descriptor instead.
+func (*ListOrdersResponse) Descriptor() ([]byte, []int) {
+	return file_v1_admin_order_admin_service_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ListOrdersResponse) GetOrders() []*domain.Order {
+	if x != nil {
+		return x.Orders
+	}
+	return nil
+}
+
+type UpdatePaymentStatusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderId       int64                  `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	PaymentStatus string                 `protobuf:"bytes,2,opt,name=payment_status,json=paymentStatus,proto3" json:"payment_status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdatePaymentStatusRequest) Reset() {
+	*x = UpdatePaymentStatusRequest{}
+	mi := &file_v1_admin_order_admin_service_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdatePaymentStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdatePaymentStatusRequest) ProtoMessage() {}
+
+func (x *UpdatePaymentStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_admin_order_admin_service_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdatePaymentStatusRequest.ProtoReflect.Descriptor instead.
+func (*UpdatePaymentStatusRequest) Descriptor() ([]byte, []int) {
+	return file_v1_admin_order_admin_service_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *UpdatePaymentStatusRequest) GetOrderId() int64 {
+	if x != nil {
+		return x.OrderId
+	}
+	return 0
+}
+
+func (x *UpdatePaymentStatusRequest) GetPaymentStatus() string {
+	if x != nil {
+		return x.PaymentStatus
+	}
+	return ""
+}
+
+type UpdatePaymentStatusResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Order         *domain.Order          `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdatePaymentStatusResponse) Reset() {
+	*x = UpdatePaymentStatusResponse{}
+	mi := &file_v1_admin_order_admin_service_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdatePaymentStatusResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdatePaymentStatusResponse) ProtoMessage() {}
+
+func (x *UpdatePaymentStatusResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_admin_order_admin_service_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdatePaymentStatusResponse.ProtoReflect.Descriptor instead.
+func (*UpdatePaymentStatusResponse) Descriptor() ([]byte, []int) {
+	return file_v1_admin_order_admin_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *UpdatePaymentStatusResponse) GetOrder() *domain.Order {
+	if x != nil {
+		return x.Order
+	}
+	return nil
+}
+
 var File_v1_admin_order_admin_service_proto protoreflect.FileDescriptor
 
 const file_v1_admin_order_admin_service_proto_rawDesc = "" +
 	"\n" +
-	"\"v1/admin/order_admin_service.proto\x127github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin2\x13\n" +
-	"\x11OrderAdminServiceB?Z=github.com/martketplace-vkr/order/pkg/api/grpc/v1/admin;adminb\x06proto3"
+	"\"v1/admin/order_admin_service.proto\x127github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin\x1a\x1cv1/domain/order_domain.proto\"\x97\x01\n" +
+	"\x11ListOrdersRequest\x12%\n" +
+	"\x0epayment_status\x18\x01 \x01(\tR\rpaymentStatus\x12-\n" +
+	"\x12fulfillment_status\x18\x02 \x01(\tR\x11fulfillmentStatus\x12\x14\n" +
+	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\x04R\x06offset\"m\n" +
+	"\x12ListOrdersResponse\x12W\n" +
+	"\x06orders\x18\x01 \x03(\v2?.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderR\x06orders\"^\n" +
+	"\x1aUpdatePaymentStatusRequest\x12\x19\n" +
+	"\border_id\x18\x01 \x01(\x03R\aorderId\x12%\n" +
+	"\x0epayment_status\x18\x02 \x01(\tR\rpaymentStatus\"t\n" +
+	"\x1bUpdatePaymentStatusResponse\x12U\n" +
+	"\x05order\x18\x01 \x01(\v2?.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderR\x05order2\xfe\x02\n" +
+	"\x11OrderAdminService\x12\xa5\x01\n" +
+	"\n" +
+	"ListOrders\x12J.github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.ListOrdersRequest\x1aK.github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.ListOrdersResponse\x12\xc0\x01\n" +
+	"\x13UpdatePaymentStatus\x12S.github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.UpdatePaymentStatusRequest\x1aT.github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.UpdatePaymentStatusResponseB?Z=github.com/martketplace-vkr/order/pkg/api/grpc/v1/admin;adminb\x06proto3"
 
-var file_v1_admin_order_admin_service_proto_goTypes = []any{}
+var (
+	file_v1_admin_order_admin_service_proto_rawDescOnce sync.Once
+	file_v1_admin_order_admin_service_proto_rawDescData []byte
+)
+
+func file_v1_admin_order_admin_service_proto_rawDescGZIP() []byte {
+	file_v1_admin_order_admin_service_proto_rawDescOnce.Do(func() {
+		file_v1_admin_order_admin_service_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_admin_order_admin_service_proto_rawDesc), len(file_v1_admin_order_admin_service_proto_rawDesc)))
+	})
+	return file_v1_admin_order_admin_service_proto_rawDescData
+}
+
+var file_v1_admin_order_admin_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_v1_admin_order_admin_service_proto_goTypes = []any{
+	(*ListOrdersRequest)(nil),           // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.ListOrdersRequest
+	(*ListOrdersResponse)(nil),          // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.ListOrdersResponse
+	(*UpdatePaymentStatusRequest)(nil),  // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.UpdatePaymentStatusRequest
+	(*UpdatePaymentStatusResponse)(nil), // 3: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.UpdatePaymentStatusResponse
+	(*domain.Order)(nil),                // 4: github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+}
 var file_v1_admin_order_admin_service_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	4, // 0: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.ListOrdersResponse.orders:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	4, // 1: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.UpdatePaymentStatusResponse.order:type_name -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order
+	0, // 2: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.OrderAdminService.ListOrders:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.ListOrdersRequest
+	2, // 3: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.OrderAdminService.UpdatePaymentStatus:input_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.UpdatePaymentStatusRequest
+	1, // 4: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.OrderAdminService.ListOrders:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.ListOrdersResponse
+	3, // 5: github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.OrderAdminService.UpdatePaymentStatus:output_type -> github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.UpdatePaymentStatusResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_v1_admin_order_admin_service_proto_init() }
@@ -47,12 +297,13 @@ func file_v1_admin_order_admin_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_admin_order_admin_service_proto_rawDesc), len(file_v1_admin_order_admin_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   0,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_v1_admin_order_admin_service_proto_goTypes,
 		DependencyIndexes: file_v1_admin_order_admin_service_proto_depIdxs,
+		MessageInfos:      file_v1_admin_order_admin_service_proto_msgTypes,
 	}.Build()
 	File_v1_admin_order_admin_service_proto = out.File
 	file_v1_admin_order_admin_service_proto_goTypes = nil

@@ -7,7 +7,10 @@
 package admin
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -15,10 +18,17 @@ import (
 // Requires gRPC-Go v1.64.0 or later.
 const _ = grpc.SupportPackageIsVersion9
 
+const (
+	OrderAdminService_ListOrders_FullMethodName          = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.OrderAdminService/ListOrders"
+	OrderAdminService_UpdatePaymentStatus_FullMethodName = "/github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.OrderAdminService/UpdatePaymentStatus"
+)
+
 // OrderAdminServiceClient is the client API for OrderAdminService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrderAdminServiceClient interface {
+	ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (*ListOrdersResponse, error)
+	UpdatePaymentStatus(ctx context.Context, in *UpdatePaymentStatusRequest, opts ...grpc.CallOption) (*UpdatePaymentStatusResponse, error)
 }
 
 type orderAdminServiceClient struct {
@@ -29,10 +39,32 @@ func NewOrderAdminServiceClient(cc grpc.ClientConnInterface) OrderAdminServiceCl
 	return &orderAdminServiceClient{cc}
 }
 
+func (c *orderAdminServiceClient) ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (*ListOrdersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListOrdersResponse)
+	err := c.cc.Invoke(ctx, OrderAdminService_ListOrders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderAdminServiceClient) UpdatePaymentStatus(ctx context.Context, in *UpdatePaymentStatusRequest, opts ...grpc.CallOption) (*UpdatePaymentStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePaymentStatusResponse)
+	err := c.cc.Invoke(ctx, OrderAdminService_UpdatePaymentStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderAdminServiceServer is the server API for OrderAdminService service.
 // All implementations must embed UnimplementedOrderAdminServiceServer
 // for forward compatibility.
 type OrderAdminServiceServer interface {
+	ListOrders(context.Context, *ListOrdersRequest) (*ListOrdersResponse, error)
+	UpdatePaymentStatus(context.Context, *UpdatePaymentStatusRequest) (*UpdatePaymentStatusResponse, error)
 	mustEmbedUnimplementedOrderAdminServiceServer()
 }
 
@@ -43,6 +75,12 @@ type OrderAdminServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOrderAdminServiceServer struct{}
 
+func (UnimplementedOrderAdminServiceServer) ListOrders(context.Context, *ListOrdersRequest) (*ListOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrders not implemented")
+}
+func (UnimplementedOrderAdminServiceServer) UpdatePaymentStatus(context.Context, *UpdatePaymentStatusRequest) (*UpdatePaymentStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePaymentStatus not implemented")
+}
 func (UnimplementedOrderAdminServiceServer) mustEmbedUnimplementedOrderAdminServiceServer() {}
 func (UnimplementedOrderAdminServiceServer) testEmbeddedByValue()                           {}
 
@@ -64,13 +102,58 @@ func RegisterOrderAdminServiceServer(s grpc.ServiceRegistrar, srv OrderAdminServ
 	s.RegisterService(&OrderAdminService_ServiceDesc, srv)
 }
 
+func _OrderAdminService_ListOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderAdminServiceServer).ListOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderAdminService_ListOrders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderAdminServiceServer).ListOrders(ctx, req.(*ListOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderAdminService_UpdatePaymentStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePaymentStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderAdminServiceServer).UpdatePaymentStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderAdminService_UpdatePaymentStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderAdminServiceServer).UpdatePaymentStatus(ctx, req.(*UpdatePaymentStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderAdminService_ServiceDesc is the grpc.ServiceDesc for OrderAdminService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var OrderAdminService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin.OrderAdminService",
 	HandlerType: (*OrderAdminServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "v1/admin/order_admin_service.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListOrders",
+			Handler:    _OrderAdminService_ListOrders_Handler,
+		},
+		{
+			MethodName: "UpdatePaymentStatus",
+			Handler:    _OrderAdminService_UpdatePaymentStatus_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "v1/admin/order_admin_service.proto",
 }

@@ -4,5 +4,29 @@ package github.com.martketplace.vkr.order.pkg.api.grpc.v1.admin;
 
 option go_package = "github.com/martketplace-vkr/order/pkg/api/grpc/v1/admin;admin";
 
+import "v1/domain/order_domain.proto";
+
 service OrderAdminService {
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
+  rpc UpdatePaymentStatus(UpdatePaymentStatusRequest) returns (UpdatePaymentStatusResponse);
+}
+
+message ListOrdersRequest {
+  string payment_status = 1;
+  string fulfillment_status = 2;
+  uint32 limit = 3;
+  uint64 offset = 4;
+}
+
+message ListOrdersResponse {
+  repeated .github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order orders = 1;
+}
+
+message UpdatePaymentStatusRequest {
+  int64 order_id = 1;
+  string payment_status = 2;
+}
+
+message UpdatePaymentStatusResponse {
+  .github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Order order = 1;
 }

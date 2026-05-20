@@ -127,25 +127,45 @@ var (
 		"canecelled_by_client":  CancelledByClient,
 		"canecelled_by_seller":  CancelledBySeller,
 	}
+
+	ValidVendorFulfillmentStatuses = map[OrderStatus]struct{}{
+		Created:           {},
+		Assembly:          {},
+		DeliveryToClient:  {},
+		WaitingPickUp:     {},
+		Success:           {},
+		CancelledBySeller: {},
+	}
 )
 
+func ParseOrderStatus(value string) (OrderStatus, error) {
+	var status OrderStatus
+	if err := status.Scan(value); err != nil {
+		return 0, err
+	}
+	return status, nil
+}
+
 type Order struct {
-	ID              int64       `db:"id"`
-	CheckoutID      string      `db:"checkout_id"`
-	UserID          int64       `db:"user_id"`
-	VendorID        int64       `db:"vendor_id"`
-	Status          OrderStatus `db:"status"`
-	ProductID       int64       `db:"product_id"`
-	ProductName     string      `db:"product_name"`
-	ProductImageURL string      `db:"product_image_url"`
-	Quantity        int64       `db:"quantity"`
-	UnitPrice       string      `db:"unit_price"`
-	TotalPrice      string      `db:"total_price"`
-	Comment         string      `db:"-"`
-	CreatedAt       time.Time   `db:"created_at"`
-	UpdatedAt       time.Time   `db:"updated_at"`
-	Payment         Payment     `db:"-"`
-	Delivery        Delivery    `db:"-"`
+	ID                int64              `db:"id"`
+	CheckoutID        string             `db:"checkout_id"`
+	UserID            int64              `db:"user_id"`
+	VendorID          int64              `db:"vendor_id"`
+	Status            OrderStatus        `db:"status"`
+	PaymentStatus     OrderPaymentStatus `db:"payment_status"`
+	FulfillmentStatus OrderStatus        `db:"fulfillment_status"`
+	DeliveryAddressID int64              `db:"delivery_address_id"`
+	ProductID         int64              `db:"product_id"`
+	ProductName       string             `db:"product_name"`
+	ProductImageURL   string             `db:"product_image_url"`
+	Quantity          int64              `db:"quantity"`
+	UnitPrice         string             `db:"unit_price"`
+	TotalPrice        string             `db:"total_price"`
+	Comment           string             `db:"-"`
+	CreatedAt         time.Time          `db:"created_at"`
+	UpdatedAt         time.Time          `db:"updated_at"`
+	Payment           Payment            `db:"-"`
+	Delivery          Delivery           `db:"-"`
 }
 
 type OrderList []Order
@@ -164,18 +184,20 @@ func OrderListFromReservation(reservation *cartorderpb.CheckoutReservation) Orde
 		}
 
 		orders = append(orders, Order{
-			CheckoutID:      reservation.GetCheckoutId(),
-			UserID:          reservation.GetUserId(),
-			VendorID:        item.GetVendorId(),
-			Status:          Created,
-			ProductID:       item.GetProductId(),
-			ProductName:     item.GetProductName(),
-			ProductImageURL: item.GetImageUrl(),
-			Quantity:        int64(item.GetQuantity()),
-			UnitPrice:       item.GetUnitPrice(),
-			TotalPrice:      item.GetTotalPrice(),
-			CreatedAt:       now,
-			UpdatedAt:       now,
+			CheckoutID:        reservation.GetCheckoutId(),
+			UserID:            reservation.GetUserId(),
+			VendorID:          item.GetVendorId(),
+			Status:            Created,
+			PaymentStatus:     OrderPaymentPendingFunds,
+			FulfillmentStatus: Created,
+			ProductID:         item.GetProductId(),
+			ProductName:       item.GetProductName(),
+			ProductImageURL:   item.GetImageUrl(),
+			Quantity:          int64(item.GetQuantity()),
+			UnitPrice:         item.GetUnitPrice(),
+			TotalPrice:        item.GetTotalPrice(),
+			CreatedAt:         now,
+			UpdatedAt:         now,
 		})
 	}
 
@@ -186,6 +208,7 @@ func (list OrderList) WithPaymentAndDelivery(payment Payment, delivery Delivery)
 	for i := range list {
 		list[i].Payment = payment
 		list[i].Delivery = delivery
+		list[i].DeliveryAddressID = delivery.EntityID()
 	}
 
 	return list

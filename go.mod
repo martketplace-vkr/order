@@ -4,6 +4,7 @@ go 1.25.1
 
 require (
 	github.com/avito-tech/go-transaction-manager v1.5.1
+	github.com/google/uuid v1.6.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/martketplace-vkr/cart v1.0.0-rc002
 	github.com/martketplace-vkr/pkg v0.0.1
@@ -15,6 +16,7 @@ require (
 	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/IBM/sarama v1.47.0 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
+	github.com/avast/retry-go/v4 v4.7.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -39,7 +41,6 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.12 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-migrate/migrate/v4 v4.19.1 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 // indirect

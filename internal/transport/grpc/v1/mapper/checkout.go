@@ -3,12 +3,14 @@ package mapper
 import (
 	orderdomain "github.com/martketplace-vkr/order/domain"
 	domainpb "github.com/martketplace-vkr/order/pkg/api/grpc/v1/domain"
+	"github.com/martketplace-vkr/pkg/utils/currency"
 )
 
 func PaymentFromProto(payment *domainpb.Payment) orderdomain.Payment {
 	result := orderdomain.Payment{
-		Type:   orderdomain.OnlineByCrypto,
-		Status: orderdomain.PendingPaymentStatus,
+		CurrencyID: int64(currency.RUB),
+		Type:       orderdomain.OnlineByCard,
+		Status:     orderdomain.PendingPaymentStatus,
 	}
 	if payment == nil {
 		return result
@@ -23,7 +25,7 @@ func PaymentFromProto(payment *domainpb.Payment) orderdomain.Payment {
 
 func DeliveryFromProto(delivery *domainpb.Delivery) orderdomain.Delivery {
 	result := orderdomain.Delivery{
-		Type: orderdomain.PickUp,
+		Type: orderdomain.ClientDelivery,
 	}
 	if delivery == nil {
 		return result

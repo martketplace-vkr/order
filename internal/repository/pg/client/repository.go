@@ -29,6 +29,9 @@ func (r *repository) GetOrder(ctx context.Context, userID int64, orderID int64) 
 			user_id,
 			vendor_id,
 			status,
+			payment_status,
+			fulfillment_status,
+			delivery_address_id,
 			product_id,
 			product_name,
 			product_image_url,
@@ -66,6 +69,9 @@ func (r *repository) GetOrderList(ctx context.Context, userID int64) ([]domain.O
 			user_id,
 			vendor_id,
 			status,
+			payment_status,
+			fulfillment_status,
+			delivery_address_id,
 			product_id,
 			product_name,
 			product_image_url,
@@ -100,7 +106,7 @@ func (r *repository) HasSuccessfulProductOrder(ctx context.Context, userID int64
 		from "order"."order"
 		where user_id = $1
 			and product_id = $2
-			and status = $3
+			and fulfillment_status = $3
 		order by created_at desc, id desc
 		limit 1
 	`
@@ -126,6 +132,7 @@ func (r *repository) CancelOrder(ctx context.Context, userID int64, orderID int6
 		update "order"."order"
 		set
 			status = $3,
+			fulfillment_status = $3,
 			updated_at = now()
 		where user_id = $1
 			and id = $2
@@ -135,6 +142,9 @@ func (r *repository) CancelOrder(ctx context.Context, userID int64, orderID int6
 			user_id,
 			vendor_id,
 			status,
+			payment_status,
+			fulfillment_status,
+			delivery_address_id,
 			product_id,
 			product_name,
 			product_image_url,
@@ -170,6 +180,9 @@ func (r *repository) GetOrdersByCheckout(ctx context.Context, userID int64, chec
 			user_id,
 			vendor_id,
 			status,
+			payment_status,
+			fulfillment_status,
+			delivery_address_id,
 			product_id,
 			product_name,
 			product_image_url,
@@ -217,6 +230,9 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 			user_id,
 			vendor_id,
 			status,
+			payment_status,
+			fulfillment_status,
+			delivery_address_id,
 			product_id,
 			product_name,
 			product_image_url,
@@ -226,7 +242,7 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 			created_at,
 			updated_at
 		)
-		values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+		values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
 		on conflict (user_id, checkout_id, product_id)
 		do update set
 			checkout_id = excluded.checkout_id
@@ -236,6 +252,9 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 			user_id,
 			vendor_id,
 			status,
+			payment_status,
+			fulfillment_status,
+			delivery_address_id,
 			product_id,
 			product_name,
 			product_image_url,
@@ -284,6 +303,15 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 		if order.UpdatedAt.IsZero() {
 			order.UpdatedAt = now
 		}
+		if order.FulfillmentStatus == 0 {
+			order.FulfillmentStatus = domain.Created
+		}
+		if order.Status == 0 {
+			order.Status = order.FulfillmentStatus
+		}
+		if order.PaymentStatus == "" {
+			order.PaymentStatus = domain.OrderPaymentPendingFunds
+		}
 
 		var createdOrder domain.Order
 		err = tx.GetContext(
@@ -294,6 +322,9 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 			order.UserID,
 			order.VendorID,
 			order.Status,
+			order.PaymentStatus,
+			order.FulfillmentStatus,
+			order.DeliveryAddressID,
 			order.ProductID,
 			order.ProductName,
 			order.ProductImageURL,

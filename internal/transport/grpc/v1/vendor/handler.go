@@ -45,7 +45,12 @@ func (h *Handler) GetOrderList(ctx context.Context, req *vendorpb.GetOrderListRe
 }
 
 func (h *Handler) UpdateOrder(ctx context.Context, req *vendorpb.UpdateOrderRequest) (resp *vendorpb.UpdateOrderResponse, err error) {
-	order, err := h.service.UpdateOrder(ctx, req.VendorId, req.OrderId, req.Status)
+	status := req.GetFulfillmentStatus()
+	if status == "" {
+		status = req.GetStatus()
+	}
+
+	order, err := h.service.UpdateOrder(ctx, req.VendorId, req.OrderId, status)
 	if err != nil {
 		return resp, toStatusError(err)
 	}

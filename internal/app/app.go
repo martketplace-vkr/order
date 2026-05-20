@@ -7,6 +7,7 @@ import (
 	cart "github.com/martketplace-vkr/cart/pkg/api/grpc/v1"
 
 	"github.com/martketplace-vkr/order/config"
+	inboxComponent "github.com/martketplace-vkr/order/internal/app/cmp/inbox"
 	outboxComponent "github.com/martketplace-vkr/order/internal/app/cmp/outbox"
 	"github.com/martketplace-vkr/order/internal/app/cmp/server"
 	adminRepository "github.com/martketplace-vkr/order/internal/repository/pg/admin"
@@ -18,6 +19,7 @@ import (
 	adminTransport "github.com/martketplace-vkr/order/internal/transport/grpc/v1/admin"
 	clientTransport "github.com/martketplace-vkr/order/internal/transport/grpc/v1/client"
 	vendorTransport "github.com/martketplace-vkr/order/internal/transport/grpc/v1/vendor"
+	"github.com/martketplace-vkr/order/pkg/eventmapper"
 
 	"github.com/martketplace-vkr/pkg/build"
 	"github.com/martketplace-vkr/pkg/build/components/pgxsqlxcomponent"
@@ -48,7 +50,13 @@ func Run(ctx context.Context, cfg *config.Config) error {
 	vendorRepo := vendorRepository.New(pg.DB, trmsqlx.DefaultCtxGetter)
 	clientServ := clientService.New(clientRepo, cartClient, outboxCmp)
 	adminServ := adminService.New(adminRepo)
-	vendorServ := vendorService.New(vendorRepo)
+	vendorServ := vendorService.New(vendorRepo, outboxCmp)
+	inboxCmp := inboxComponent.New(
+		cfg.Inbox,
+		pg,
+		kafkaClient,
+		eventmapper.GetEventMapper(adminServ),
+	)
 
 	clientHandler := clientTransport.New(clientServ)
 	adminHandler := adminTransport.New(adminServ)
@@ -63,6 +71,7 @@ func Run(ctx context.Context, cfg *config.Config) error {
 
 	cmps := build.Components{
 		pg,
+		inboxCmp,
 		outboxCmp,
 		cartClient,
 		grpcServer,

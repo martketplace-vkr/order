@@ -11,7 +11,7 @@ func TestPaymentFromProtoDefaultsWhenNil(t *testing.T) {
 	t.Parallel()
 
 	payment := PaymentFromProto(nil)
-	if payment.Type != orderdomain.OnlineByCrypto {
+	if payment.Type != orderdomain.OnlineByCard {
 		t.Fatalf("unexpected payment type: %v", payment.Type)
 	}
 	if payment.Status != orderdomain.PendingPaymentStatus {
@@ -23,7 +23,7 @@ func TestDeliveryFromProtoDefaultsWhenNil(t *testing.T) {
 	t.Parallel()
 
 	delivery := DeliveryFromProto(nil)
-	if delivery.Type != orderdomain.PickUp {
+	if delivery.Type != orderdomain.ClientDelivery {
 		t.Fatalf("unexpected delivery type: %v", delivery.Type)
 	}
 	if delivery.EntityID() != 0 {
