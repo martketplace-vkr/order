@@ -36,6 +36,7 @@ func (s *service) Checkout(
 		CheckoutId:          req.CheckoutID,
 		ProductIds:          req.ProductIDs,
 		ExpectedCartVersion: req.ExpectedCartVersion,
+		PreferredCurrencyId: req.PreferredCurrencyID,
 	})
 	if err != nil {
 		return nil, err

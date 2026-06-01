@@ -21,6 +21,7 @@ message CheckoutRequest {
   uint64 expected_cart_version = 4;
   .github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Delivery delivery = 5;
   .github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.Payment payment =  6;
+  int64 preferred_currency_id = 7;
 }
 
 message CheckoutResponse {

@@ -36,6 +36,7 @@ func (r *repository) GetOrder(ctx context.Context, vendorID int64, orderID int64
 			quantity,
 			unit_price,
 			total_price,
+			coalesce((select p.currency_id from "order".payment p where p.order_id = "order"."order".id), 1000) as currency_id,
 			created_at,
 			updated_at
 		from "order"."order"
@@ -75,6 +76,7 @@ func (r *repository) GetOrderList(ctx context.Context, vendorID int64) ([]domain
 			quantity,
 			unit_price,
 			total_price,
+			coalesce((select p.currency_id from "order".payment p where p.order_id = "order"."order".id), 1000) as currency_id,
 			created_at,
 			updated_at
 		from "order"."order"
@@ -125,6 +127,7 @@ func (r *repository) UpdateOrder(
 			quantity,
 			unit_price,
 			total_price,
+			coalesce((select p.currency_id from "order".payment p where p.order_id = "order"."order".id), 1000) as currency_id,
 			created_at,
 			updated_at
 	`

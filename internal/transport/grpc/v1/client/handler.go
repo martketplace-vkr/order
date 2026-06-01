@@ -48,6 +48,7 @@ func (h *Handler) Checkout(ctx context.Context, req *clientpb.CheckoutRequest) (
 		CheckoutID:          req.GetCheckoutId(),
 		ProductIDs:          req.GetProductIds(),
 		ExpectedCartVersion: req.GetExpectedCartVersion(),
+		PreferredCurrencyID: req.GetPreferredCurrencyId(),
 		Payment:             mapper.PaymentFromProto(req.GetPayment()),
 		Delivery:            mapper.DeliveryFromProto(req.GetDelivery()),
 	})

@@ -23,6 +23,7 @@ create table if not exists "order"."order" (
 create table if not exists "order".payment (
     order_id bigint not null,
     payment_id integer,
+    currency_id bigint not null default 1000,
     type integer not null,
     status integer not null,
 

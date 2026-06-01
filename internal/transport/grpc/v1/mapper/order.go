@@ -26,6 +26,7 @@ func OrderToProto(order *orderdomain.Order) *domainpb.Order {
 		PaymentStatus:     string(order.PaymentStatus),
 		FulfillmentStatus: fulfillmentStatus.String(),
 		DeliveryAddressId: order.DeliveryAddressID,
+		CurrencyId:        order.CurrencyID,
 		Product: &domainpb.OrderProduct{
 			ProductId:   order.ProductID,
 			ProductName: order.ProductName,

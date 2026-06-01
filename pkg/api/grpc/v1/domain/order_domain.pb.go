@@ -39,6 +39,7 @@ type Order struct {
 	PaymentStatus     string                 `protobuf:"bytes,12,opt,name=payment_status,json=paymentStatus,proto3" json:"payment_status,omitempty"`
 	FulfillmentStatus string                 `protobuf:"bytes,13,opt,name=fulfillment_status,json=fulfillmentStatus,proto3" json:"fulfillment_status,omitempty"`
 	DeliveryAddressId int64                  `protobuf:"varint,14,opt,name=delivery_address_id,json=deliveryAddressId,proto3" json:"delivery_address_id,omitempty"`
+	CurrencyId        int64                  `protobuf:"varint,15,opt,name=currency_id,json=currencyId,proto3" json:"currency_id,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -171,6 +172,13 @@ func (x *Order) GetDeliveryAddressId() int64 {
 	return 0
 }
 
+func (x *Order) GetCurrencyId() int64 {
+	if x != nil {
+		return x.CurrencyId
+	}
+	return 0
+}
+
 type OrderProduct struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     int64                  `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
@@ -294,6 +302,7 @@ func (x *Delivery) GetClintAddressId() int64 {
 type Payment struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Type          int64                  `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"` // 1 - in pick up point by cash,  2 - in pick up point by card, 3 - online by card, 4 online by crypto
+	CurrencyId    int64                  `protobuf:"varint,2,opt,name=currency_id,json=currencyId,proto3" json:"currency_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -335,11 +344,18 @@ func (x *Payment) GetType() int64 {
 	return 0
 }
 
+func (x *Payment) GetCurrencyId() int64 {
+	if x != nil {
+		return x.CurrencyId
+	}
+	return 0
+}
+
 var File_v1_domain_order_domain_proto protoreflect.FileDescriptor
 
 const file_v1_domain_order_domain_proto_rawDesc = "" +
 	"\n" +
-	"\x1cv1/domain/order_domain.proto\x128github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb9\x04\n" +
+	"\x1cv1/domain/order_domain.proto\x128github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain\x1a\x1fgoogle/protobuf/timestamp.proto\"\xda\x04\n" +
 	"\x05Order\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x12\x1b\n" +
@@ -359,7 +375,9 @@ const file_v1_domain_order_domain_proto_rawDesc = "" +
 	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12%\n" +
 	"\x0epayment_status\x18\f \x01(\tR\rpaymentStatus\x12-\n" +
 	"\x12fulfillment_status\x18\r \x01(\tR\x11fulfillmentStatus\x12.\n" +
-	"\x13delivery_address_id\x18\x0e \x01(\x03R\x11deliveryAddressId\"m\n" +
+	"\x13delivery_address_id\x18\x0e \x01(\x03R\x11deliveryAddressId\x12\x1f\n" +
+	"\vcurrency_id\x18\x0f \x01(\x03R\n" +
+	"currencyId\"m\n" +
 	"\fOrderProduct\x12\x1d\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\x03R\tproductId\x12!\n" +
@@ -370,9 +388,11 @@ const file_v1_domain_order_domain_proto_rawDesc = "" +
 	"\x10pick_up_point_id\x18\x02 \x01(\x03H\x00R\rpickUpPointId\x88\x01\x01\x12-\n" +
 	"\x10clint_address_id\x18\x03 \x01(\x03H\x01R\x0eclintAddressId\x88\x01\x01B\x13\n" +
 	"\x11_pick_up_point_idB\x13\n" +
-	"\x11_clint_address_id\"\x1d\n" +
+	"\x11_clint_address_id\">\n" +
 	"\aPayment\x12\x12\n" +
-	"\x04type\x18\x01 \x01(\x03R\x04typeBAZ?github.com/martketplace-vkr/order/pkg/api/grpc/v1/domain;domainb\x06proto3"
+	"\x04type\x18\x01 \x01(\x03R\x04type\x12\x1f\n" +
+	"\vcurrency_id\x18\x02 \x01(\x03R\n" +
+	"currencyIdBAZ?github.com/martketplace-vkr/order/pkg/api/grpc/v1/domain;domainb\x06proto3"
 
 var (
 	file_v1_domain_order_domain_proto_rawDescOnce sync.Once

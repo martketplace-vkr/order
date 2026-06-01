@@ -30,6 +30,7 @@ type CheckoutRequest struct {
 	ExpectedCartVersion uint64                 `protobuf:"varint,4,opt,name=expected_cart_version,json=expectedCartVersion,proto3" json:"expected_cart_version,omitempty"`
 	Delivery            *domain.Delivery       `protobuf:"bytes,5,opt,name=delivery,proto3" json:"delivery,omitempty"`
 	Payment             *domain.Payment        `protobuf:"bytes,6,opt,name=payment,proto3" json:"payment,omitempty"`
+	PreferredCurrencyId int64                  `protobuf:"varint,7,opt,name=preferred_currency_id,json=preferredCurrencyId,proto3" json:"preferred_currency_id,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -104,6 +105,13 @@ func (x *CheckoutRequest) GetPayment() *domain.Payment {
 		return x.Payment
 	}
 	return nil
+}
+
+func (x *CheckoutRequest) GetPreferredCurrencyId() int64 {
+	if x != nil {
+		return x.PreferredCurrencyId
+	}
+	return 0
 }
 
 type CheckoutResponse struct {
@@ -538,7 +546,7 @@ var File_v1_client_order_client_service_proto protoreflect.FileDescriptor
 
 const file_v1_client_order_client_service_proto_rawDesc = "" +
 	"\n" +
-	"$v1/client/order_client_service.proto\x128github.com.martketplace.vkr.order.pkg.api.grpc.v1.client\x1a\x1cv1/domain/order_domain.proto\"\xdd\x02\n" +
+	"$v1/client/order_client_service.proto\x128github.com.martketplace.vkr.order.pkg.api.grpc.v1.client\x1a\x1cv1/domain/order_domain.proto\"\x91\x03\n" +
 	"\x0fCheckoutRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1f\n" +
 	"\vcheckout_id\x18\x02 \x01(\tR\n" +
@@ -547,7 +555,8 @@ const file_v1_client_order_client_service_proto_rawDesc = "" +
 	"productIds\x122\n" +
 	"\x15expected_cart_version\x18\x04 \x01(\x04R\x13expectedCartVersion\x12^\n" +
 	"\bdelivery\x18\x05 \x01(\v2B.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.DeliveryR\bdelivery\x12[\n" +
-	"\apayment\x18\x06 \x01(\v2A.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.PaymentR\apayment\"k\n" +
+	"\apayment\x18\x06 \x01(\v2A.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.PaymentR\apayment\x122\n" +
+	"\x15preferred_currency_id\x18\a \x01(\x03R\x13preferredCurrencyId\"k\n" +
 	"\x10CheckoutResponse\x12W\n" +
 	"\x06orders\x18\x01 \x03(\v2?.github.com.martketplace.vkr.order.pkg.api.grpc.v1.domain.OrderR\x06orders\"E\n" +
 	"\x0fGetOrderRequest\x12\x17\n" +

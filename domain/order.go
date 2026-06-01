@@ -8,6 +8,7 @@ import (
 	"time"
 
 	cartorderpb "github.com/martketplace-vkr/cart/pkg/api/grpc/v1/order"
+	"github.com/martketplace-vkr/pkg/utils/currency"
 )
 
 type (
@@ -161,6 +162,7 @@ type Order struct {
 	Quantity          int64              `db:"quantity"`
 	UnitPrice         string             `db:"unit_price"`
 	TotalPrice        string             `db:"total_price"`
+	CurrencyID        int64              `db:"currency_id"`
 	Comment           string             `db:"-"`
 	CreatedAt         time.Time          `db:"created_at"`
 	UpdatedAt         time.Time          `db:"updated_at"`
@@ -196,8 +198,14 @@ func OrderListFromReservation(reservation *cartorderpb.CheckoutReservation) Orde
 			Quantity:          int64(item.GetQuantity()),
 			UnitPrice:         item.GetUnitPrice(),
 			TotalPrice:        item.GetTotalPrice(),
-			CreatedAt:         now,
-			UpdatedAt:         now,
+			CurrencyID:        normalizedCurrencyID(item.GetCurrencyId()),
+			Payment: Payment{
+				CurrencyID: normalizedCurrencyID(item.GetCurrencyId()),
+				Type:       paymentTypeForCurrency(normalizedCurrencyID(item.GetCurrencyId())),
+				Status:     PendingPaymentStatus,
+			},
+			CreatedAt: now,
+			UpdatedAt: now,
 		})
 	}
 
@@ -206,10 +214,38 @@ func OrderListFromReservation(reservation *cartorderpb.CheckoutReservation) Orde
 
 func (list OrderList) WithPaymentAndDelivery(payment Payment, delivery Delivery) OrderList {
 	for i := range list {
-		list[i].Payment = payment
+		nextPayment := payment
+		if list[i].CurrencyID > 0 {
+			nextPayment.CurrencyID = list[i].CurrencyID
+			nextPayment.Type = paymentTypeForCurrency(list[i].CurrencyID)
+		}
+		if nextPayment.CurrencyID <= 0 {
+			nextPayment.CurrencyID = int64(currency.RUB)
+		}
+		if nextPayment.Type <= 0 {
+			nextPayment.Type = paymentTypeForCurrency(nextPayment.CurrencyID)
+		}
+		if nextPayment.Status <= 0 {
+			nextPayment.Status = PendingPaymentStatus
+		}
+		list[i].Payment = nextPayment
 		list[i].Delivery = delivery
 		list[i].DeliveryAddressID = delivery.EntityID()
 	}
 
 	return list
+}
+
+func normalizedCurrencyID(currencyID int64) int64 {
+	if currencyID <= 0 {
+		return int64(currency.RUB)
+	}
+	return currencyID
+}
+
+func paymentTypeForCurrency(currencyID int64) PaymentType {
+	if currencyID == int64(currency.USDTinTRC) {
+		return OnlineByCrypto
+	}
+	return OnlineByCard
 }

@@ -22,6 +22,7 @@ message Order {
   string payment_status = 12;
   string fulfillment_status = 13;
   int64 delivery_address_id = 14;
+  int64 currency_id = 15;
 }
 
 message OrderProduct {
@@ -39,4 +40,5 @@ message Delivery {
 
 message Payment{
   int64 type = 1; // 1 - in pick up point by cash,  2 - in pick up point by card, 3 - online by card, 4 online by crypto 
+  int64 currency_id = 2;
 }

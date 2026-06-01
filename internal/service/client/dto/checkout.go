@@ -7,6 +7,7 @@ type CheckoutRequest struct {
 	CheckoutID          string
 	ProductIDs          []int64
 	ExpectedCartVersion uint64
+	PreferredCurrencyID int64
 	Payment             domain.Payment
 	Delivery            domain.Delivery
 }

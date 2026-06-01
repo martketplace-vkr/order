@@ -19,6 +19,9 @@ func PaymentFromProto(payment *domainpb.Payment) orderdomain.Payment {
 	if paymentType := orderdomain.PaymentType(payment.GetType()); paymentType > 0 {
 		result.Type = paymentType
 	}
+	if currencyID := payment.GetCurrencyId(); currencyID > 0 {
+		result.CurrencyID = currencyID
+	}
 
 	return result
 }

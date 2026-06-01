@@ -38,6 +38,7 @@ func (r *repository) GetOrder(ctx context.Context, userID int64, orderID int64) 
 			quantity,
 			unit_price,
 			total_price,
+			coalesce((select p.currency_id from "order".payment p where p.order_id = "order"."order".id), 1000) as currency_id,
 			created_at,
 			updated_at
 		from "order"."order"
@@ -78,6 +79,7 @@ func (r *repository) GetOrderList(ctx context.Context, userID int64) ([]domain.O
 			quantity,
 			unit_price,
 			total_price,
+			coalesce((select p.currency_id from "order".payment p where p.order_id = "order"."order".id), 1000) as currency_id,
 			created_at,
 			updated_at
 		from "order"."order"
@@ -151,6 +153,7 @@ func (r *repository) CancelOrder(ctx context.Context, userID int64, orderID int6
 			quantity,
 			unit_price,
 			total_price,
+			coalesce((select p.currency_id from "order".payment p where p.order_id = "order"."order".id), 1000) as currency_id,
 			created_at,
 			updated_at
 	`
@@ -189,6 +192,7 @@ func (r *repository) GetOrdersByCheckout(ctx context.Context, userID int64, chec
 			quantity,
 			unit_price,
 			total_price,
+			coalesce((select p.currency_id from "order".payment p where p.order_id = "order"."order".id), 1000) as currency_id,
 			created_at,
 			updated_at
 		from "order"."order"
@@ -268,12 +272,14 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 	paymentQuery := `
 		insert into "order".payment(
 			order_id,
+			currency_id,
 			type,
 			status
 		) values (
 			$1,
 			$2,
-			$3 
+			$3,
+			$4
 		)
 	`
 
@@ -342,6 +348,7 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 			ctx,
 			paymentQuery,
 			createdOrder.ID,
+			order.Payment.CurrencyID,
 			order.Payment.Type,
 			order.Payment.Status,
 		)
@@ -360,6 +367,10 @@ func (r *repository) CreateOrders(ctx context.Context, orders []domain.Order) ([
 		if err != nil {
 			return nil, err
 		}
+
+		createdOrder.Payment = order.Payment
+		createdOrder.CurrencyID = order.Payment.CurrencyID
+		createdOrder.Delivery = order.Delivery
 
 		createdOrders = append(createdOrders, createdOrder)
 	}

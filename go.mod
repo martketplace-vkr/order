@@ -6,7 +6,7 @@ require (
 	github.com/avito-tech/go-transaction-manager v1.5.1
 	github.com/google/uuid v1.6.0
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/martketplace-vkr/cart v1.0.0-rc002
+	github.com/martketplace-vkr/cart v1.0.0-rc002.0.20260601084646-3730db4f0417
 	github.com/martketplace-vkr/pkg v0.0.1
 	google.golang.org/grpc v1.79.2
 	google.golang.org/protobuf v1.36.11
